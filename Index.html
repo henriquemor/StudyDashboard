@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #222;
+        }
+        .materia {
+            margin-bottom: 20px;
+        }
+        .materia input[type="text"] {
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: block;
+            color: white;
+            background-color: transparent;
+        }
+        .aula {
+            width: 6em;
+            height: 5em;
+            border-radius: 50%;
+            display: inline-block;
+            padding-top:1em;
+            margin: 5px;
+            text-align: center;
+            font-size:.8em;
+            cursor: pointer;
+            border: 3px solid #00000000;
+        }
+        .alertar{
+           border: 3px solid red;
+           
+        }
+        .inicial {
+            background-color: #ddd;
+        }
+        .estudando {
+            background-color: #5cdb77;color: white;
+        }
+        .amarelo , .questoes1, .questoes2, .questoes3,.amarelo4{
+            background-color: #ffd91c;
+        }
+        .revisao {
+            background-color: purple;color: white;
+        }
+        .azul {
+            background-color: blue;
+            color: white;
+        }
+        .aula button{
+            background-color: #ffffff77;
+            border: none;
+            color: inherit;
+            border-radius: 5px;
+        }
+        button{
+          background-color: #ffffff33;
+            color: white;
+            border: none;
+          
+        }
+        .button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #ffffff33;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #jsonArea {
+            width: 100%;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+    <button class="button" onclick="copyToJson()">exportar</button>
+    <button class="button" onclick="loadFromJson()">importar</button>
+    <textarea id="jsonArea" placeholder="JSON"></textarea>
+
+
+    <script>
+        const materias = JSON.parse(localStorage.getItem('materias')) || [
+  {
+    "nome": "Desafios",
+    "aulas": []
+  },
+  {
+    "nome": "Ética",
+    "aulas": []
+  },
+  {
+    "nome": "Diversidade",
+    "aulas": []
+  },
+  {
+    "nome": "Adm Pública",
+    "aulas": []
+  },
+  {
+    "nome": "AFO",
+    "aulas": []
+  },
+  {
+    "nome": "🚀SST",
+    "aulas": []
+  },
+  {
+    "nome": "🚀Dir Trabalho",
+    "aulas": []
+  },
+  {
+    "nome": "Políticas Públicas",
+    "aulas": []
+  },
+  {
+    "nome": "Gestão e Governança [Q]",
+    "aulas": []
+  },
+  {
+    "nome": "🚀Sociologia",
+    "aulas": []
+  }
+];
+
+        function render() {
+            const app = document.getElementById('app');
+            app.innerHTML = '';
+            materias.forEach((materia, mIndex) => {
+                const materiaDiv = document.createElement('div');
+                materiaDiv.className = 'materia';
+
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.value = materia.nome;
+                input.oninput = (e) => {
+                    materia.nome = e.target.value;
+                    save();
+                };
+                materiaDiv.appendChild(input);
+
+                materia.aulas.forEach((aula, aIndex) => {
+                    const aulaDiv = document.createElement('div');
+                    let alerta = "";
+                    if(aula.alerta){
+                      //alerta = "⚠️🚩"
+                      aulaDiv.classList.add("alertar");
+                    } else {
+                    aulaDiv.classList.remove("alertar");
+                    }
+                aulaDiv.classList.add("aula");
+                aulaDiv.classList.add(aula.status);
+                    //aulaDiv.className = `aula ${aula.status}`;
+                    aulaDiv.innerHTML = `${aula.nome}<br>${aula.status}<br>`+alerta;
+
+                    const saveDateBtn = document.createElement('button');
+saveDateBtn.textContent = '+';
+saveDateBtn.onclick = (e) => {
+    e.stopPropagation();
+    const today = new Date().toISOString().split('T')[0];
+    aula.estudos.push(today);
+    updateStatus(mIndex, aIndex);
+    save();
+};
+aulaDiv.appendChild(saveDateBtn);
+
+                    aulaDiv.onclick = () => {
+                        const currentStatus = aula.status;
+                        const statuses = ['inicial', 'estudando', 'questoes1', 'questoes2', 'questoes3', 'revisao'];
+                        const nextStatus = statuses[(statuses.indexOf(currentStatus) + 1) % statuses.length];
+                        aula.status = nextStatus;
+                        updateStatus(mIndex, aIndex);
+                        save();
+                    };
+
+                    materiaDiv.appendChild(aulaDiv);
+                });
+
+                const addAulaBtn = document.createElement('button');
+                addAulaBtn.textContent = 'Adicionar Aula';
+                addAulaBtn.onclick = () => {
+                    materia.aulas.push({ status: 'inicial', estudos: [], nome: materia.aulas.length, alerta: false});
+                    render();
+                    save();
+                };
+                materiaDiv.appendChild(addAulaBtn);
+
+                app.appendChild(materiaDiv);
+            });
+        }
+
+        function updateStatus(mIndex, aIndex) {
+            const aula = materias[mIndex].aulas[aIndex];
+            const lastStudyDate = new Date(aula.estudos.at(-1));
+            const currentDate = new Date();
+            const daysDiff = Math.floor((currentDate - lastStudyDate) / (1000 * 60 * 60 * 24));
+//alert(daysDiff)
+            switch (aula.status) {
+                case 'questoes1':
+                    if (daysDiff > 3) aula.alerta = true;
+                    break;
+                case 'questoes2':
+                    if (daysDiff > 7) aula.alerta = true;
+                    //alert(daysDiff)
+                    break;
+                case 'questoes3':
+                
+                case 'revisao':
+                    if (daysDiff > 15) aula.alerta = true;
+                    break;
+               default:
+               aula.alerta = false;
+               break;
+            }
+            if(daysDiff < 3){
+              aula.alerta = false;
+            }
+            if(isNaN(daysDiff) && aula.status !== "estudando" && aula.status !== "inicial"){aula.alerta = true;}
+            render();
+        }
+
+        function save() {
+            localStorage.setItem('materias', JSON.stringify(materias));
+        }
+
+        function copyToJson() {
+            document.getElementById('jsonArea').value = JSON.stringify(materias, null, 2);
+        }
+
+        function loadFromJson() {
+            try {
+                const json = JSON.parse(document.getElementById('jsonArea').value);
+                materias.length = 0;
+                Array.prototype.push.apply(materias, json);
+                save();
+                render();
+            } catch (e) {
+                alert('JSON inválido!');
+            }
+        }
+
+        render();
+    </script>
+</body>
+</html>
