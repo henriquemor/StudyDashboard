@@ -5,13 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estudos</title>
     <style>
+        
+        * {
+  box-sizing: border-box;
+}
         body {
-            font-family: Arial, sans-serif;
+            font-family: sans-serif;
             margin: 20px;
             background-color: #222;
+            color: white;
         }
         .materia {
-            margin-bottom: 20px;
+            margin-bottom: 3em;
         }
         .materia input[type="text"] {
             font-size: 18px;
@@ -21,8 +26,8 @@
             background-color: transparent;
         }
         .aula {
-            width: 6em;
-            height: 5em;
+            width: 7em;
+            height: 7em;
             border-radius: 50%;
             display: inline-block;
             padding-top:1em;
@@ -31,6 +36,16 @@
             font-size:.8em;
             cursor: pointer;
             border: 3px solid #00000000;
+            color:#222;
+        }
+        .aula .nome{
+          display: block;
+          font-size: 1.3em;
+        }        
+        .aula .status{
+          display: block;
+          font-size: .8em;
+          margin: .5em;
         }
         .alertar{
            border: 3px solid red;
@@ -74,16 +89,22 @@
         }
         #jsonArea {
             width: 100%;
-            height: 200px;
+            height: 200px
+            
+        }
+        summary{
+          
         }
     </style>
 </head>
 <body>
     <div id="app"></div>
+    <details>
+      <summary>exportar/importar</summary>
     <button class="button" onclick="copyToJson()">exportar</button>
     <button class="button" onclick="loadFromJson()">importar</button>
     <textarea id="jsonArea" placeholder="JSON"></textarea>
-
+</details>
 
     <script>
         const materias = JSON.parse(localStorage.getItem('materias')) || [
@@ -156,8 +177,35 @@
                     }
                 aulaDiv.classList.add("aula");
                 aulaDiv.classList.add(aula.status);
+                
+                
+                let textoStatus= "";
+                switch (aula.status) {
+                  case "inicial":
+                    textoStatus = "&nbsp;";
+                    break;
+                case "estudando":
+                    textoStatus = "estudando";
+                    break;
+                case "questoes1":
+                    textoStatus = "questões 1/4";
+                    break;
+                    case "questoes2":
+                    textoStatus = "questões 2/4";
+                    break;
+                    case "questoes3":
+                    textoStatus = "questões 3/4";
+                    break;
+                    case "revisao":
+                    textoStatus = "revisando";
+                    break;
+               default:
+               
+               break;
+            }
+                
                     //aulaDiv.className = `aula ${aula.status}`;
-                    aulaDiv.innerHTML = `${aula.nome}<br>${aula.status}<br>`+alerta;
+                    aulaDiv.innerHTML = `<span class="nome">${aula.nome}</span><span class="status">${textoStatus}</span><span class="alertexto">${alerta}</span>`;
 
                     const saveDateBtn = document.createElement('button');
 saveDateBtn.textContent = '+';
@@ -169,6 +217,7 @@ saveDateBtn.onclick = (e) => {
     save();
 };
 aulaDiv.appendChild(saveDateBtn);
+if(aula.status == "inicial"){saveDateBtn.style = "visibility: hidden";}
 
                     aulaDiv.onclick = () => {
                         const currentStatus = aula.status;
@@ -184,6 +233,7 @@ aulaDiv.appendChild(saveDateBtn);
 
                 const addAulaBtn = document.createElement('button');
                 addAulaBtn.textContent = 'Adicionar Aula';
+                addAulaBtn.style= "padding: 1em; margin-top:1em";
                 addAulaBtn.onclick = () => {
                     materia.aulas.push({ status: 'inicial', estudos: [], nome: materia.aulas.length, alerta: false});
                     render();
