@@ -48,25 +48,21 @@
           margin: .5em;
         }
         .alertar{
-           border: 3px solid red;
-           
+           border: 3px solid #f94040;
         }
         .inicial {
             background-color: #ddd;
         }
         .estudando {
-            background-color: #5cdb77;color: white;
+            background-color: #58c603;color: white;
         }
-        .amarelo , .questoes1, .questoes2, .questoes3,.amarelo4{
+        .questoes1, .questoes2, .questoes3{
             background-color: #ffd91c;
         }
         .revisao {
-            background-color: purple;color: white;
+            background-color: #b303c6;color: white;
         }
-        .azul {
-            background-color: blue;
-            color: white;
-        }
+        
         .aula button{
             background-color: #ffffff77;
             border: none;
@@ -95,6 +91,38 @@
         summary{
           
         }
+
+        
+
+        input[type='radio']:after {
+        width: 15px;
+        height: 15px;
+        border-radius: 15px;
+        top: -2px;
+        left: -1px;
+        position: relative;
+        background-color: #333;
+        content: '';
+        display: inline-block;
+        visibility: visible;
+        border: 2px solid #444;
+    }
+
+    input[type='radio']:checked:after {
+        width: 15px;
+        height: 15px;
+        border-radius: 15px;
+        top: -2px;
+        left: -1px;
+        position: relative;
+        background-color: #91ef62;
+        content: '';
+        display: inline-block;
+        visibility: visible;
+        border: 2px solid #444;
+    }
+
+        
     </style>
 </head>
 <body>
@@ -156,6 +184,16 @@
             materias.forEach((materia, mIndex) => {
                 const materiaDiv = document.createElement('div');
                 materiaDiv.className = 'materia';
+
+                const radiox = document.createElement('input');
+                radiox.type = 'radio';
+                radiox.id = 'm'+ mIndex;
+                radiox.value = mIndex;
+                radiox.name = "onde";
+                radiox.style= "display: inline-block";
+                
+                materiaDiv.appendChild(radiox);
+
 
                 const input = document.createElement('input');
                 input.type = 'text';
