@@ -185,6 +185,10 @@
                 const materiaDiv = document.createElement('div');
                 materiaDiv.className = 'materia';
 
+                const materiaDivTitle = document.createElement('div');
+                materiaDivTitle.className = 'title';
+                materiaDiv.appendChild(materiaDivTitle);
+
                 const radiox = document.createElement('input');
                 radiox.type = 'radio';
                 radiox.id = 'm'+ mIndex;
@@ -192,7 +196,7 @@
                 radiox.name = "onde";
                 radiox.style= "display: inline-block";
                 
-                materiaDiv.appendChild(radiox);
+                materiaDivTitle.appendChild(radiox);
 
 
                 const input = document.createElement('input');
@@ -203,7 +207,7 @@
                     save();
                 };
                 input.style= "display: inline-block";
-                materiaDiv.appendChild(input);
+                materiaDivTitle.appendChild(input);
 
                 materia.aulas.forEach((aula, aIndex) => {
                     const aulaDiv = document.createElement('div');
