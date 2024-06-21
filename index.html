@@ -24,6 +24,9 @@ body {
     display: block;
     color: white;
     background-color: transparent;
+    border: 1px solid #353535;
+    padding: 6px;
+    width: 20em;
 }
 .aula {
     width: 7em;
@@ -48,13 +51,13 @@ body {
     margin: 0.5em;
 }
 .alertar {
-    border: 3px solid #f94040;
+    border: 3px solid #ff4747;
 }
 .inicial {
-    background-color: #ddd;
+    background-color: #dbdbdb;
 }
 .estudando {
-    background-color: #58c603;
+    background-color: #7cb516;
     color: white;
 }
 .questoes1,
@@ -63,7 +66,7 @@ body {
     background-color: #ffd91c;
 }
 .revisao {
-    background-color: #b303c6;
+    background-color: #b826c8;
     color: white;
 }
 
@@ -72,6 +75,10 @@ body {
     border: none;
     color: inherit;
     border-radius: 5px;
+    cursor: crosshair;
+}
+.addAula{
+    border-radius: 7px;
 }
 button {
     background-color: #ffffff33;
@@ -84,8 +91,8 @@ button {
     background-color: #ffffff33;
     color: white;
     border: none;
-    cursor: pointer;
 }
+	    
 #jsonArea {
     width: 100%;
     height: 200px;
@@ -192,6 +199,28 @@ function render() {
 		materiaDivTitle.className = 'title';
 		materiaDiv.appendChild(materiaDivTitle);
 
+		const upBtn = document.createElement('button');
+		upBtn.innerHTML = '&#x25B2;'; // Seta para cima
+		upBtn.onclick = () => {
+		    if (mIndex > 0) {
+ 		       [materias[mIndex], materias[mIndex - 1]] = [materias[mIndex - 1], materias[mIndex]];
+		        render();
+ 		       save();
+ 		   }
+		};	
+		materiaDiv.appendChild(upBtn);
+
+		const downBtn = document.createElement('button');
+		downBtn.innerHTML = '&#x25BC;'; // Seta para baixo
+		downBtn.onclick = () => {
+  		  if (mIndex < materias.length - 1) {
+  		      [materias[mIndex], materias[mIndex + 1]] = [materias[mIndex + 1], materias[mIndex]];
+		        render();
+  		      save();
+ 		   }
+		};
+		materiaDiv.appendChild(downBtn);
+
 		const radiox = document.createElement('input');
 		radiox.type = 'radio';
 		radiox.id = 'm' + mIndex;
@@ -282,6 +311,7 @@ function render() {
 
 		const addAulaBtn = document.createElement('button');
 		addAulaBtn.textContent = 'Adicionar Aula';
+		addAulaBtn.class = "addAula";
 		addAulaBtn.style = "padding: 1em; margin-top:1em";
 		addAulaBtn.onclick = () => {
 			materia.aulas.push({
