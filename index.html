@@ -5,122 +5,121 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estudos</title>
     <style>
-        
-        * {
-  box-sizing: border-box;
+
+* {
+    box-sizing: border-box;
 }
-        body {
-            font-family: sans-serif;
-            margin: 20px;
-            background-color: #222;
-            color: white;
-        }
-        .materia {
-            margin-bottom: 3em;
-        }
-        .materia input[type="text"] {
-            font-size: 18px;
-            margin-bottom: 10px;
-            display: block;
-            color: white;
-            background-color: transparent;
-        }
-        .aula {
-            width: 7em;
-            height: 7em;
-            border-radius: 50%;
-            display: inline-block;
-            padding-top:1em;
-            margin: 5px;
-            text-align: center;
-            font-size:.8em;
-            cursor: pointer;
-            border: 3px solid #00000000;
-            color:#222;
-        }
-        .aula .nome{
-          display: block;
-          font-size: 1.3em;
-        }        
-        .aula .status{
-          display: block;
-          font-size: .8em;
-          margin: .5em;
-        }
-        .alertar{
-           border: 3px solid #f94040;
-        }
-        .inicial {
-            background-color: #ddd;
-        }
-        .estudando {
-            background-color: #58c603;color: white;
-        }
-        .questoes1, .questoes2, .questoes3{
-            background-color: #ffd91c;
-        }
-        .revisao {
-            background-color: #b303c6;color: white;
-        }
-        
-        .aula button{
-            background-color: #ffffff77;
-            border: none;
-            color: inherit;
-            border-radius: 5px;
-        }
-        button{
-          background-color: #ffffff33;
-            color: white;
-            border: none;
-          
-        }
-        .button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #ffffff33;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        #jsonArea {
-            width: 100%;
-            height: 200px
-            
-        }
-        summary{
-          
-        }
+body {
+    font-family: sans-serif;
+    margin: 20px;
+    background-color: #222;
+    color: white;
+}
+.materia {
+    margin-bottom: 3em;
+}
+.materia input[type="text"] {
+    font-size: 18px;
+    margin-bottom: 10px;
+    display: block;
+    color: white;
+    background-color: transparent;
+}
+.aula {
+    width: 7em;
+    height: 7em;
+    border-radius: 50%;
+    display: inline-block;
+    padding-top: 1em;
+    margin: 5px;
+    text-align: center;
+    font-size: 0.8em;
+    cursor: pointer;
+    border: 3px solid #00000000;
+    color: #222;
+}
+.aula .nome {
+    display: block;
+    font-size: 1.3em;
+}
+.aula .status {
+    display: block;
+    font-size: 0.8em;
+    margin: 0.5em;
+}
+.alertar {
+    border: 3px solid #f94040;
+}
+.inicial {
+    background-color: #ddd;
+}
+.estudando {
+    background-color: #58c603;
+    color: white;
+}
+.questoes1,
+.questoes2,
+.questoes3 {
+    background-color: #ffd91c;
+}
+.revisao {
+    background-color: #b303c6;
+    color: white;
+}
 
-        
+.aula button {
+    background-color: #ffffff77;
+    border: none;
+    color: inherit;
+    border-radius: 5px;
+}
+button {
+    background-color: #ffffff33;
+    color: white;
+    border: none;
+}
+.button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #ffffff33;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+#jsonArea {
+    width: 100%;
+    height: 200px;
+}
+summary {
+}
 
-        input[type='radio']:after {
-        width: 15px;
-        height: 15px;
-        border-radius: 15px;
-        top: -2px;
-        left: -1px;
-        position: relative;
-        background-color: #333;
-        content: '';
-        display: inline-block;
-        visibility: visible;
-        border: 2px solid #444;
-    }
+input[type="radio"]:after {
+    width: 15px;
+    height: 15px;
+    border-radius: 15px;
+    top: -2px;
+    left: -1px;
+    position: relative;
+    background-color: #333;
+    content: "";
+    display: inline-block;
+    visibility: visible;
+    border: 2px solid #444;
+}
 
-    input[type='radio']:checked:after {
-        width: 15px;
-        height: 15px;
-        border-radius: 15px;
-        top: -2px;
-        left: -1px;
-        position: relative;
-        background-color: #91ef62;
-        content: '';
-        display: inline-block;
-        visibility: visible;
-        border: 2px solid #444;
-    }
+input[type="radio"]:checked:after {
+    width: 15px;
+    height: 15px;
+    border-radius: 15px;
+    top: -2px;
+    left: -1px;
+    position: relative;
+    background-color: #91ef62;
+    content: "";
+    display: inline-block;
+    visibility: visible;
+    border: 2px solid #444;
+}
 
         
     </style>
@@ -135,220 +134,234 @@
 </details>
 
     <script>
-        const materias = JSON.parse(localStorage.getItem('materias')) || [
-  {
-    "nome": "Desafios",
-    "aulas": []
-  },
-  {
-    "nome": "Ética",
-    "aulas": []
-  },
-  {
-    "nome": "Diversidade",
-    "aulas": []
-  },
-  {
-    "nome": "Adm Pública",
-    "aulas": []
-  },
-  {
-    "nome": "AFO",
-    "aulas": []
-  },
-  {
-    "nome": "🚀SST",
-    "aulas": []
-  },
-  {
-    "nome": "🚀Dir Trabalho",
-    "aulas": []
-  },
-  {
-    "nome": "Políticas Públicas",
-    "aulas": []
-  },
-  {
-    "nome": "Gestão e Governança [Q]",
-    "aulas": []
-  },
-  {
-    "nome": "🚀Sociologia",
-    "aulas": []
-  }
+
+
+        
+const materias = JSON.parse(localStorage.getItem('materias')) || [{
+		"nome": "Desafios",
+		"aulas": []
+	},
+	{
+		"nome": "Ética",
+		"aulas": []
+	},
+	{
+		"nome": "Diversidade",
+		"aulas": []
+	},
+	{
+		"nome": "Adm Pública",
+		"aulas": []
+	},
+	{
+		"nome": "AFO",
+		"aulas": []
+	},
+	{
+		"nome": "🚀SST",
+		"aulas": []
+	},
+	{
+		"nome": "🚀Dir Trabalho",
+		"aulas": []
+	},
+	{
+		"nome": "Políticas Públicas",
+		"aulas": []
+	},
+	{
+		"nome": "Gestão e Governança [Q]",
+		"aulas": []
+	},
+	{
+		"nome": "🚀Sociologia",
+		"aulas": []
+	}
 ];
 
-        function render() {
-            const app = document.getElementById('app');
-            app.innerHTML = '';
-            let selectedRadio = localStorage.getItem('selectedRadio');
-            
-            materias.forEach((materia, mIndex) => {
-                const materiaDiv = document.createElement('div');
-                materiaDiv.className = 'materia';
+function render() {
+	const app = document.getElementById('app');
+	app.innerHTML = '';
+	let selectedRadio = localStorage.getItem('selectedRadio');
 
-                const materiaDivTitle = document.createElement('div');
-                materiaDivTitle.className = 'title';
-                materiaDiv.appendChild(materiaDivTitle);
+	materias.forEach((materia, mIndex) => {
+		const materiaDiv = document.createElement('div');
+		materiaDiv.className = 'materia';
 
-                const radiox = document.createElement('input');
-                radiox.type = 'radio';
-                radiox.id = 'm'+ mIndex;
-                radiox.value = mIndex;
-                radiox.name = "onde";
-                radiox.style= "display: inline-block";
-                radiox.checked = selectedRadio === mIndex;
-                
-                materiaDivTitle.appendChild(radiox);
+		const materiaDivTitle = document.createElement('div');
+		materiaDivTitle.className = 'title';
+		materiaDiv.appendChild(materiaDivTitle);
+
+		const radiox = document.createElement('input');
+		radiox.type = 'radio';
+		radiox.id = 'm' + mIndex;
+		radiox.value = mIndex;
+		radiox.name = "onde";
+		radiox.style = "display: inline-block";
+		radiox.checked = selectedRadio === mIndex;
+
+		materiaDivTitle.appendChild(radiox);
 
 
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.value = materia.nome;
-                input.oninput = (e) => {
-                    materia.nome = e.target.value;
-                    save();
-                };
-                input.style= "display: inline-block";
-                materiaDivTitle.appendChild(input);
+		const input = document.createElement('input');
+		input.type = 'text';
+		input.value = materia.nome;
+		input.oninput = (e) => {
+			materia.nome = e.target.value;
+			save();
+		};
+		input.style = "display: inline-block";
+		materiaDivTitle.appendChild(input);
 
-                materia.aulas.forEach((aula, aIndex) => {
-                    const aulaDiv = document.createElement('div');
-                    let alerta = "";
-                    if(aula.alerta){
-                      //alerta = "⚠️🚩"
-                      aulaDiv.classList.add("alertar");
-                    } else {
-                    aulaDiv.classList.remove("alertar");
-                    }
-                aulaDiv.classList.add("aula");
-                aulaDiv.classList.add(aula.status);
-                
-                
-                let textoStatus= "";
-                switch (aula.status) {
-                  case "inicial":
-                    textoStatus = "&nbsp;";
-                    break;
-                case "estudando":
-                    textoStatus = "estudando";
-                    break;
-                case "questoes1":
-                    textoStatus = "questões 1/4";
-                    break;
-                    case "questoes2":
-                    textoStatus = "questões 2/4";
-                    break;
-                    case "questoes3":
-                    textoStatus = "questões 3/4";
-                    break;
-                    case "revisao":
-                    textoStatus = "revisando";
-                    break;
-               default:
-               
-               break;
-            }
-                
-                    //aulaDiv.className = `aula ${aula.status}`;
-                    aulaDiv.innerHTML = `<span class="nome">${aula.nome}</span><span class="status">${textoStatus}</span><span class="alertexto">${alerta}</span>`;
+		materia.aulas.forEach((aula, aIndex) => {
+			const aulaDiv = document.createElement('div');
+			let alerta = "";
+			if (aula.alerta) {
+				//alerta = "⚠️🚩"
+				aulaDiv.classList.add("alertar");
+			} else {
+				aulaDiv.classList.remove("alertar");
+			}
+			aulaDiv.classList.add("aula");
+			aulaDiv.classList.add(aula.status);
 
-                    const saveDateBtn = document.createElement('button');
-saveDateBtn.textContent = '+';
-saveDateBtn.onclick = (e) => {
-    e.stopPropagation();
-    const today = new Date().toISOString().split('T')[0];
-    aula.estudos.push(today);
-    updateStatus(mIndex, aIndex);
-    save();
-};
-aulaDiv.appendChild(saveDateBtn);
-if(aula.status == "inicial"){saveDateBtn.style = "visibility: hidden";}
 
-                    aulaDiv.onclick = () => {
-                        const currentStatus = aula.status;
-                        const statuses = ['inicial', 'estudando', 'questoes1', 'questoes2', 'questoes3', 'revisao'];
-                        const nextStatus = statuses[(statuses.indexOf(currentStatus) + 1) % statuses.length];
-                        aula.status = nextStatus;
-                        updateStatus(mIndex, aIndex);
-                        save();
-                    };
+			let textoStatus = "";
+			switch (aula.status) {
+				case "inicial":
+					textoStatus = "&nbsp;";
+					break;
+				case "estudando":
+					textoStatus = "estudando";
+					break;
+				case "questoes1":
+					textoStatus = "questões 1/4";
+					break;
+				case "questoes2":
+					textoStatus = "questões 2/4";
+					break;
+				case "questoes3":
+					textoStatus = "questões 3/4";
+					break;
+				case "revisao":
+					textoStatus = "revisando";
+					break;
+				default:
 
-                    materiaDiv.appendChild(aulaDiv);
-                });
+					break;
+			}
 
-                const addAulaBtn = document.createElement('button');
-                addAulaBtn.textContent = 'Adicionar Aula';
-                addAulaBtn.style= "padding: 1em; margin-top:1em";
-                addAulaBtn.onclick = () => {
-                    materia.aulas.push({ status: 'inicial', estudos: [], nome: materia.aulas.length, alerta: false});
-                    render();
-                    save();
-                };
-                materiaDiv.appendChild(addAulaBtn);
+			//aulaDiv.className = `aula ${aula.status}`;
+			aulaDiv.innerHTML = `<span class="nome">${aula.nome}</span><span class="status">${textoStatus}</span><span class="alertexto">${alerta}</span>`;
 
-                app.appendChild(materiaDiv);
-            });
-        }
+			const saveDateBtn = document.createElement('button');
+			saveDateBtn.textContent = '+';
+			saveDateBtn.onclick = (e) => {
+				e.stopPropagation();
+				const today = new Date().toISOString().split('T')[0];
+				aula.estudos.push(today);
+				updateStatus(mIndex, aIndex);
+				save();
+			};
+			aulaDiv.appendChild(saveDateBtn);
+			if (aula.status == "inicial") {
+				saveDateBtn.style = "visibility: hidden";
+			}
 
-        function updateStatus(mIndex, aIndex) {
-            const aula = materias[mIndex].aulas[aIndex];
-            const lastStudyDate = new Date(aula.estudos.at(-1));
-            const currentDate = new Date();
-            const daysDiff = Math.floor((currentDate - lastStudyDate) / (1000 * 60 * 60 * 24));
-//alert(daysDiff)
-            switch (aula.status) {
-                case 'questoes1':
-                    if (daysDiff > 3) aula.alerta = true;
-                    break;
-                case 'questoes2':
-                    if (daysDiff > 7) aula.alerta = true;
-                    //alert(daysDiff)
-                    break;
-                case 'questoes3':
-                
-                case 'revisao':
-                    if (daysDiff > 15) aula.alerta = true;
-                    break;
-               default:
-               aula.alerta = false;
-               break;
-            }
-            if(daysDiff < 3){
-              aula.alerta = false;
-            }
-            if(isNaN(daysDiff) && aula.status !== "estudando" && aula.status !== "inicial"){aula.alerta = true;}
-            render();
-        }
+			aulaDiv.onclick = () => {
+				const currentStatus = aula.status;
+				const statuses = ['inicial', 'estudando', 'questoes1', 'questoes2', 'questoes3', 'revisao'];
+				const nextStatus = statuses[(statuses.indexOf(currentStatus) + 1) % statuses.length];
+				aula.status = nextStatus;
+				updateStatus(mIndex, aIndex);
+				save();
+			};
 
-        function save() {
-            localStorage.setItem('materias', JSON.stringify(materias));
-                const selectedRadio = document.querySelector('input[name="onde"]:checked');
-                if (selectedRadio) {
-                    localStorage.setItem('selectedRadio', selectedRadio.value);
-                }
-        }
+			materiaDiv.appendChild(aulaDiv);
+		});
 
-        function copyToJson() {
-            document.getElementById('jsonArea').value = JSON.stringify(materias, null, 2);
-        }
+		const addAulaBtn = document.createElement('button');
+		addAulaBtn.textContent = 'Adicionar Aula';
+		addAulaBtn.style = "padding: 1em; margin-top:1em";
+		addAulaBtn.onclick = () => {
+			materia.aulas.push({
+				status: 'inicial',
+				estudos: [],
+				nome: materia.aulas.length,
+				alerta: false
+			});
+			render();
+			save();
+		};
+		materiaDiv.appendChild(addAulaBtn);
 
-        function loadFromJson() {
-            try {
-                const json = JSON.parse(document.getElementById('jsonArea').value);
-                document.querySelectorAll('input[type="radio"]').forEach(radio => {
-                    radio.checked = false;
-                });
-                materias.length = 0;
-                Array.prototype.push.apply(materias, json);
-                save();
-                render();
-            } catch (e) {
-                alert('JSON inválido!');
-            }
-        }
+		app.appendChild(materiaDiv);
+	});
+}
 
-        render();
+function updateStatus(mIndex, aIndex) {
+	const aula = materias[mIndex].aulas[aIndex];
+	const lastStudyDate = new Date(aula.estudos.at(-1));
+	const currentDate = new Date();
+	const daysDiff = Math.floor((currentDate - lastStudyDate) / (1000 * 60 * 60 * 24));
+	//alert(daysDiff)
+	switch (aula.status) {
+		case 'questoes1':
+			if (daysDiff > 3) aula.alerta = true;
+			break;
+		case 'questoes2':
+			if (daysDiff > 7) aula.alerta = true;
+			//alert(daysDiff)
+			break;
+		case 'questoes3':
+
+		case 'revisao':
+			if (daysDiff > 15) aula.alerta = true;
+			break;
+		default:
+			aula.alerta = false;
+			break;
+	}
+	if (daysDiff < 3) {
+		aula.alerta = false;
+	}
+	if (isNaN(daysDiff) && aula.status !== "estudando" && aula.status !== "inicial") {
+		aula.alerta = true;
+	}
+	render();
+}
+
+function save() {
+	localStorage.setItem('materias', JSON.stringify(materias));
+	const selectedRadio = document.querySelector('input[name="onde"]:checked');
+	if (selectedRadio) {
+		localStorage.setItem('selectedRadio', selectedRadio.value);
+	}
+}
+
+function copyToJson() {
+	document.getElementById('jsonArea').value = JSON.stringify(materias, null, 2);
+}
+
+function loadFromJson() {
+	try {
+		const json = JSON.parse(document.getElementById('jsonArea').value);
+		document.querySelectorAll('input[type="radio"]').forEach(radio => {
+			radio.checked = false;
+		});
+		materias.length = 0;
+		Array.prototype.push.apply(materias, json);
+		save();
+		render();
+	} catch (e) {
+		alert('JSON inválido!');
+	}
+}
+
+render();
+
+
+        
     </script>
 </body>
 </html>
