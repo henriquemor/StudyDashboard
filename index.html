@@ -77,9 +77,7 @@ body {
     border-radius: 5px;
     cursor: crosshair;
 }
-.addAula{
-    border-radius: 7px;
-}
+
 button {
     background-color: #ffffff33;
     color: white;
@@ -92,6 +90,17 @@ button {
     color: white;
     border: none;
 }
+.addAula{
+    border-radius: 4px;
+    padding: 0.5em .7em;
+}
+.upBtn{
+    transform: rotate(90deg);
+}
+.downBtn{
+    transform: rotate(270deg);
+}
+
 	    
 #jsonArea {
     width: 100%;
@@ -200,7 +209,8 @@ function render() {
 		materiaDiv.appendChild(materiaDivTitle);
 
 		const upBtn = document.createElement('button');
-		upBtn.innerHTML = '&#x25B2;'; // Seta para cima
+		upBtn.innerHTML = '&#x16B2;'; // Seta para cima
+		upBtn.className = 'upBtn';
 		upBtn.onclick = () => {
 		    if (mIndex > 0) {
  		       [materias[mIndex], materias[mIndex - 1]] = [materias[mIndex - 1], materias[mIndex]];
@@ -208,10 +218,11 @@ function render() {
  		       save();
  		   }
 		};	
-		materiaDiv.appendChild(upBtn);
+		materiaDivTitle.appendChild(upBtn);
 
 		const downBtn = document.createElement('button');
-		downBtn.innerHTML = '&#x25BC;'; // Seta para baixo
+		downBtn.innerHTML = '&#x16B2;'; // Seta para baixo
+		downBtn.className = 'downBtn';
 		downBtn.onclick = () => {
   		  if (mIndex < materias.length - 1) {
   		      [materias[mIndex], materias[mIndex + 1]] = [materias[mIndex + 1], materias[mIndex]];
@@ -219,7 +230,7 @@ function render() {
   		      save();
  		   }
 		};
-		materiaDiv.appendChild(downBtn);
+		materiaDivTitle.appendChild(downBtn);
 
 		const radiox = document.createElement('input');
 		radiox.type = 'radio';
@@ -311,7 +322,7 @@ function render() {
 
 		const addAulaBtn = document.createElement('button');
 		addAulaBtn.textContent = 'Adicionar Aula';
-		addAulaBtn.class = "addAula";
+		addAulaBtn.className = "addAula";
 		addAulaBtn.style = "padding: 1em; margin-top:1em";
 		addAulaBtn.onclick = () => {
 			materia.aulas.push({
