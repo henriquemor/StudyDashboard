@@ -208,6 +208,31 @@ function render() {
 		materiaDivTitle.className = 'title';
 		materiaDiv.appendChild(materiaDivTitle);
 
+		
+
+		const radiox = document.createElement('input');
+		radiox.type = 'radio';
+		radiox.id = 'm' + mIndex;
+		radiox.value = mIndex;
+		radiox.name = "onde";
+		radiox.style = "display: inline-block";
+		radiox.checked = (selectedRadio === mIndex);
+
+		materiaDivTitle.appendChild(radiox);
+
+
+		const input = document.createElement('input');
+		input.type = 'text';
+		input.value = materia.nome;
+		input.oninput = (e) => {
+			materia.nome = e.target.value;
+			save();
+		};
+		input.style = "display: inline-block";
+		materiaDivTitle.appendChild(input);
+
+
+
 		const upBtn = document.createElement('button');
 		upBtn.innerHTML = '&#x16B2;'; // Seta para cima
 		upBtn.className = 'upBtn';
@@ -232,26 +257,7 @@ function render() {
 		};
 		materiaDivTitle.appendChild(downBtn);
 
-		const radiox = document.createElement('input');
-		radiox.type = 'radio';
-		radiox.id = 'm' + mIndex;
-		radiox.value = mIndex;
-		radiox.name = "onde";
-		radiox.style = "display: inline-block";
-		radiox.checked = (selectedRadio === mIndex);
-
-		materiaDivTitle.appendChild(radiox);
-
-
-		const input = document.createElement('input');
-		input.type = 'text';
-		input.value = materia.nome;
-		input.oninput = (e) => {
-			materia.nome = e.target.value;
-			save();
-		};
-		input.style = "display: inline-block";
-		materiaDivTitle.appendChild(input);
+		
 
 		materia.aulas.forEach((aula, aIndex) => {
 			const aulaDiv = document.createElement('div');
