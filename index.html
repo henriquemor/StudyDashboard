@@ -145,6 +145,10 @@ input[type="radio"]:checked:after {
 </head>
 <body>
     <div id="app"></div>
+    <button class="button addMateria" onclick="
+	    materias.push({ nome: `Matéria ${materias.length + 1}`, aulas: [] });
+            render();
+            save();">Adicionar Matéria</button>
     <details>
       <summary>exportar/importar</summary>
     <button class="button" onclick="copyToJson()">exportar</button>
