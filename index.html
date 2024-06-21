@@ -198,7 +198,7 @@ function render() {
 		radiox.value = mIndex;
 		radiox.name = "onde";
 		radiox.style = "display: inline-block";
-		radiox.checked = selectedRadio === mIndex;
+		radiox.checked = (selectedRadio === mIndex);
 
 		materiaDivTitle.appendChild(radiox);
 
@@ -297,6 +297,11 @@ function render() {
 
 		app.appendChild(materiaDiv);
 	});
+
+	
+document.getElementById("m"+selectedRadio).checked = true;
+
+	
 }
 
 function updateStatus(mIndex, aIndex) {
@@ -361,7 +366,10 @@ function loadFromJson() {
 
 	    
 render();
+	    
 
+
+	    
 document.querySelectorAll('input[type="radio"][name="onde"]').forEach(radio => {
     radio.addEventListener('change', save);
 });
