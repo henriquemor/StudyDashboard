@@ -358,9 +358,13 @@ function loadFromJson() {
 	}
 }
 
+
+	    
 render();
 
-
+document.querySelectorAll('input[type="radio"][name="onde"]').forEach(radio => {
+    radio.addEventListener('change', save);
+});
         
     </script>
 </body>
