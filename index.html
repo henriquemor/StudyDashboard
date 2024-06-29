@@ -356,11 +356,12 @@ function render() {
 
 		materia.aulas.forEach((aula, aIndex) => {
 			countAulas++;
+			updateStatus(mIndex, aIndex);
 			const aulaDiv = document.createElement('div');
 
 			const borderDiv = document.createElement('div');
 			borderDiv.classList.add("border");
-			updateStatus(mIndex, aIndex);
+			
 
 			let alerta = "";
 			if (aula.alerta) {
@@ -412,7 +413,8 @@ function render() {
 				e.stopPropagation();
 				const today = new Date().toISOString().split('T')[0];
 				aula.estudos.push(today);
-				updateStatus(mIndex, aIndex);
+				//updateStatus(mIndex, aIndex);
+				render();
 				save();
 			};
 			aulaDiv.appendChild(saveDateBtn);
@@ -425,7 +427,8 @@ function render() {
 				const statuses = ['inicial', 'estudando', 'questoes1', 'questoes2', 'questoes3', 'revisao'];
 				const nextStatus = statuses[(statuses.indexOf(currentStatus) + 1) % statuses.length];
 				aula.status = nextStatus;
-				updateStatus(mIndex, aIndex);
+				//updateStatus(mIndex, aIndex);
+				render();
 				save();
 			};
 
@@ -496,7 +499,7 @@ function updateStatus(mIndex, aIndex) {
 	if (isNaN(daysDiff) && aula.status !== "estudando" && aula.status !== "inicial") {
 		aula.alerta = true;
 	}
-	render();
+	
 }
 
 function save() {
