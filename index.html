@@ -552,7 +552,9 @@ function loadFromJson() {
 		save();
 		render();
 	} catch (e) {
-		alert('JSON inválido!');
+		//alert('erro'+e);
+		console.log("Erro ao importar:")
+		console.log(e);
 	}
 }
 
