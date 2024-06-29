@@ -28,18 +28,44 @@ body {
     padding: 6px;
     width: 20em;
 }
+.aulaWrapper{
+	position: relative;
+	display: inline-block;
+}
 .aula {
     width: 7em;
     height: 7em;
     border-radius: 50%;
     display: inline-block;
     padding-top: 1em;
-    margin: 5px;
+    margin: 8px;
     text-align: center;
     font-size: 0.8em;
     cursor: pointer;
     border: 3px solid #00000000;
     color: #222;
+	z-index: 2;
+}
+.border{
+	position: absolute;
+	top:0;
+	left:0;
+	width: 7em;
+    height: 7em;
+    border-radius: 50%;
+    display: inline-block;
+    padding-top: 1em;
+    margin: 8px;
+    text-align: center;
+    font-size: 0.8em;
+    border: 3px solid #00000018;
+    color: #222;
+	z-index: -1;
+	transform: scale(1.15);
+	
+}
+.border-alertar{
+	opacity: .2;
 }
 .aula .nome {
     display: block;
@@ -52,15 +78,70 @@ body {
 }
 .alertar {
   /*  border: 3px solid #ff4747; */
-    background-size: contain;
+    background-size: cover;
     background-origin: border-box;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 67 68'%3E%3Cstyle%3E.s0 %7B fill: %23222222 %7D%3C/style%3E%3Cpath id='broken_path' class='s0' d='m50 68l-16-18-1-11 6-1 2-22 13-9 13-8-23-1-2 8-7 5v24l-15 3-15-12-3-5-5 4 2 7 1-4 5 2 10 10-16 11v12l15 7-5-14 12-15 9-1v13l9 16zm-3-77'/%3E%3C/svg%3E"),
+    color: white;
+}
+.alertar::before{
+	border-bottom: red solid 5px;
+}
+.broken1{
+	/* https://heyallan.github.io/svg-to-data-uri/ */
+	background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 67 68'%3E%3Cstyle%3E.s0 %7B fill: %23222222 %7D%3C/style%3E%3Cpath id='broken_path' class='s0' d='m50 68l-16-18-1-11 6-1 2-22 13-9 13-8-23-1-2 8-7 5v24l-15 3-15-12-3-5-5 4 2 7 1-4 5 2 10 10-16 11v12l15 7-5-14 12-15 9-1v13l9 16zm-3-77'/%3E%3C/svg%3E"),
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 0, 0),
+      rgba(17, 0, 255, 0.308)
+    ); 
+	
+}
+.broken2{
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 67 68'%3E%3Cstyle%3E.s0 %7B fill: %23222222 %7D%3C/style%3E%3Cpath id='broken_path' class='s0' d='m3.3 76.5l14.5-33.8 9.3-6 3.7 4.9 20.4-8.4 14 7.4 17.5 8.1-10.1-22.8-12.1 3.6-7.7-3.9-21.2 11.1-9.6-12 3.7-18.8 3-5 5-9.9-18.7 8.7 6.6 2.7 0.5 5.3-4.2 13.5-17.2-9.1-17.4 8.7 7.5 13.4 10.1-10.9 18.9 3.7 5 7.5-11.5 6.1-19.5 27.4z'/%3E%3C/svg%3E"),
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 0, 0),
+      rgba(17, 0, 255, 0.308)
+    ); 
+}
+.broken3{
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 67 68'%3E%3Cstyle%3E.s0 %7B fill: %23222222 %7D%3C/style%3E%3Cpath id='broken_path' class='s0' d='m53.8 81.4l-21.1-30-0.2-11.1 6-0.6 3.6-21.8 13.5-8 16.1-10.7-24.7-3.4-3.3 12.2-7.3 4.5-1.7 24-15.1 1.9-14.2-13-2.6-5.2-5.8-9.5-2.4 20.5 5.7-4.2 4.9 2.4 9.2 10.7-16.7 9.8-1.7 19.4 15.3 0.6-4-14.3 13.1-14.1 9-0.4-0.9 13 13.2 31z'/%3E%3C/svg%3E"),
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 0, 0),
+      rgba(17, 0, 255, 0.308)
+    ); 
+}
+.broken4{
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 67 68'%3E%3Cstyle%3E.s0 %7B fill: %23222222 %7D%3C/style%3E%3Cpath id='broken_path' class='s0' d='m83.5 46.3l-36.7-1.6-8.9-6.6 3.2-5.1-15.1-16.1 1.9-15.7 1.3-19.2-17.7 17.5 7.7 10-0.9 8.6 17.9 15.9-7.7 13.2-18.9 3.3-5.8-1.1-11-1.2 3.5 22.1 11.4-14.8 4.9-2.4 14.1-0.8-2.4 19.2 14.3 13.2 9.8-11.8-13.7-5.5-3.3-19 5.2-7.3 9.8 8.6 32.6 8.5z'/%3E%3C/svg%3E"),
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 0, 0),
+      rgba(17, 0, 255, 0.308)
+    ); 
+}
+.broken5{
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 67 68'%3E%3Cstyle%3E.s0 %7B fill: %23222222 %7D%3C/style%3E%3Cpath id='broken_path' class='s0' d='m66.1-4.6l-14.3 33.8-9.3 6.1-3.7-4.9-20.3 8.6-14.1-7.3-17.5-8 10.2 22.7 12-3.6 7.7 3.8 21.3-11.2 9.6 11.8-3.6 18.9-3 5-4.9 9.9 21.9 4.5-9.9-15.9-0.5-5.4 4.1-13.5 17.2 9 17.4-8.8-7.6-13.3-10 10.9-18.9-3.6-5.1-7.5 11.5-6 19.4-27.6z'/%3E%3C/svg%3E"),
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 0, 0),
+      rgba(17, 0, 255, 0.308)
+    ); 
+}
+.broken6{
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 67 68'%3E%3Cstyle%3E.s0 %7B fill: %23222222 %7D%3C/style%3E%3Cpath id='broken_path' class='s0' d='m-4.8-3.3l31.7 18.7 4.7 9.9-5.2 3 5.7 21.4-9 12.9-10.2 16.3 23.8-7.1-2-12.4 4.8-7.1-8.4-22.5 13.1-8.1 18.2 6.1 4.6 3.6 9.2 6.2 7.2-21.2-17 7.8-5.4-0.2-12.8-5.9 11.1-15.9-6.4-18.3-14.2 5.7 9.5 11.4-6 18.3-8.1 4-4.5-12.2-24.8-22.8z'/%3E%3C/svg%3E"),
      linear-gradient(
       to bottom,
-      rgb(255 255 0 / 10%),
-      rgb(0 0 255 / 40%)
-    );
-    color: white;
+      rgba(255, 255, 0, 0),
+      rgba(17, 0, 255, 0.308)
+    ); 
+}
+.broken7{
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 67 68'%3E%3Cstyle%3E.s0 %7B fill: %23222222 %7D%3C/style%3E%3Cpath id='broken_path' class='s0' d='m-2.1 72.1l23.8-28 10.6-3 2.1 5.7 22-2 11.2 11.1 14.3 12.9-2.9-24.7-12.6-0.2-6.2-5.9-23.6 4.3-5.7-14.2 9.1-16.9 4.4-3.9 7.7-8-19.6-10.8 4.6 18.1-1 5.3-8 11.7-13.8-13.8-19.2 3.2 3.3 15.1 12.8-7.5 17 9.1 2.6 8.6-12.8 2.4-26.7 20.5z'/%3E%3C/svg%3E"),
+	linear-gradient(
+      to bottom,
+      rgba(255, 255, 0, 0),
+      rgba(17, 0, 255, 0.308)
+    ); 
 }
 .inicial {
     background-color: #464646;
@@ -70,14 +151,33 @@ body {
     background-color: #7cb516;
     color: white;
 }
+.border-estudando{
+	border-right: #7cb516 3px solid;
+}
 .questoes1,
 .questoes2,
 .questoes3 {
     background-color: #ffd91c;
 }
+.border-questoes1{
+	border-right: #ffd91c 3px solid;
+}
+.border-questoes2{
+	border-right: #ffd91c 3px solid;
+	border-bottom: #ffd91c 3px solid;
+
+}
+.border-questoes3{
+	border-right: #ffd91c 3px solid;
+	border-bottom: #ffd91c 3px solid;
+	border-left: #ffd91c 3px solid;
+}
 .revisao {
     background-color: #b826c8;
     color: white;
+}
+.border-revisao{
+	border: #b826c8 3px solid;
 }
 
 .aula button {
@@ -103,6 +203,18 @@ button {
 .addAula{
     border-radius: 4px;
     padding: 0.5em .7em;
+	position: relative;
+    top: -1.5em;
+	margin-left: 2em;
+	background-color: #39393942;
+}
+.addMateria{
+    border-radius: 4px;
+    padding: 1em 1em;
+	position: relative;
+    top: -1.5em;
+	margin-left: 2em;
+	background-color: #39393942;
 }
 .upBtn{
    
@@ -163,6 +275,7 @@ input[type="radio"]:checked:after {
       <summary>exportar/importar</summary>
     <button class="button" onclick="copyToJson()">exportar</button>
     <button class="button" onclick="loadFromJson()">importar</button>
+	<button class="button" onclick="exportToFile()">Download em TXT</button>
     <textarea id="jsonArea" placeholder="JSON"></textarea>
 </details>
 
@@ -170,53 +283,18 @@ input[type="radio"]:checked:after {
 
 
         
-const materias = JSON.parse(localStorage.getItem('materias')) || [{
-		"nome": "Desafios",
-		"aulas": []
-	},
-	{
-		"nome": "Ética",
-		"aulas": []
-	},
-	{
-		"nome": "Diversidade",
-		"aulas": []
-	},
-	{
-		"nome": "Adm Pública",
-		"aulas": []
-	},
-	{
-		"nome": "AFO",
-		"aulas": []
-	},
-	{
-		"nome": "🚀SST",
-		"aulas": []
-	},
-	{
-		"nome": "🚀Dir Trabalho",
-		"aulas": []
-	},
-	{
-		"nome": "Políticas Públicas",
-		"aulas": []
-	},
-	{
-		"nome": "Gestão e Governança [Q]",
-		"aulas": []
-	},
-	{
-		"nome": "🚀Sociologia",
-		"aulas": []
-	}
+const materias = JSON.parse(localStorage.getItem('materias')) || [
+  {
+    "nome": "Matéria 1",
+    "aulas": []
+  }
 ];
 
 function render() {
 	const app = document.getElementById('app');
 	app.innerHTML = '';
 	let selectedRadio = localStorage.getItem('selectedRadio');
-
+    let countAulas = 0;
 	materias.forEach((materia, mIndex) => {
 		const materiaDiv = document.createElement('div');
 		materiaDiv.className = 'materia';
@@ -277,11 +355,21 @@ function render() {
 		
 
 		materia.aulas.forEach((aula, aIndex) => {
+			countAulas++;
 			const aulaDiv = document.createElement('div');
+
+			const borderDiv = document.createElement('div');
+			borderDiv.classList.add("border");
+
 			let alerta = "";
 			if (aula.alerta) {
 				//alerta = "⚠️🚩"
 				aulaDiv.classList.add("alertar");
+				const brokenArray = [1, 2, 3, 4, 5, 6, 7];
+				const broken = brokenArray[countAulas % brokenArray.length];
+				aulaDiv.classList.add("broken"+broken);
+
+				borderDiv.classList.add("border-alertar");
 			} else {
 				aulaDiv.classList.remove("alertar");
 			}
@@ -340,7 +428,17 @@ function render() {
 				save();
 			};
 
-			materiaDiv.appendChild(aulaDiv);
+			const aulaWrapperDiv = document.createElement('div');
+			aulaWrapperDiv.classList.add("aulaWrapper");
+			materiaDiv.appendChild(aulaWrapperDiv);
+			
+
+			aulaWrapperDiv.appendChild(aulaDiv);
+
+			
+			borderDiv.classList.add("border-"+aula.status);
+			aulaWrapperDiv.appendChild(borderDiv);
+
 		});
 
 		const addAulaBtn = document.createElement('button');
@@ -411,7 +509,16 @@ function save() {
 function copyToJson() {
 	document.getElementById('jsonArea').value = JSON.stringify(materias, null, 2);
 }
-
+function exportToFile() {
+    const dataStr = JSON.stringify(materias, null, 2);
+    const dataUri = 'data:text/plain;charset=utf-8,' + encodeURIComponent(dataStr);
+    const exportFileDefaultName = 'estudos.txt';
+    
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+}
 function loadFromJson() {
 	try {
 		const json = JSON.parse(document.getElementById('jsonArea').value);
