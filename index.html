@@ -360,6 +360,7 @@ function render() {
 
 			const borderDiv = document.createElement('div');
 			borderDiv.classList.add("border");
+			updateStatus(mIndex, aIndex);
 
 			let alerta = "";
 			if (aula.alerta) {
