@@ -529,10 +529,18 @@ function save() {
 }
 
 function copyToJson() {
-	document.getElementById('jsonArea').value = JSON.stringify(materias, null, 2);
+	//document.getElementById('jsonArea').value = JSON.stringify(materias, null, 2);
+
+    const replacer = (key, value) => {
+        if (key === 'alerta' || key === 'daysDiff') return undefined;
+        return value;
+    };
+    const dataStr = JSON.stringify(materias, replacer);
+    document.getElementById('jsonArea').value = dataStr;
 }
+	    
 function exportToFile() {
-    const dataStr = JSON.stringify(materias, null, 2);
+    const dataStr = JSON.stringify(materias);
     const dataUri = 'data:text/plain;charset=utf-8,' + encodeURIComponent(dataStr);
     const exportFileDefaultName = 'estudos.txt';
     
