@@ -552,7 +552,30 @@
         	
         if(selectedRadio){document.getElementById("m"+selectedRadio).checked = true;}
         
-        	
+		
+
+
+		
+	let totalProgress = 0;
+        let totalAulas = 0;
+        let totalInitialCount = 0;
+        
+        materias.forEach(materia => {
+            totalAulas += materia.aulas.length;
+            totalProgress += materia.aulas.reduce((total, aula) => total + (statusWeights[aula.status] || 0), 0);
+            totalInitialCount += materia.aulas.filter(aula => aula.status === 'inicial').length;
+        });
+        
+        const overallProgress = totalProgress / totalAulas;
+        
+        const overallProgressDiv = document.getElementById('progressoTotalTexto');
+        overallProgressDiv.textContent = `Progresso Total: ${overallProgress.toFixed(0)}% - iniciadas: ${totalAulas-totalInitialCount} de ${totalAulas} (${(((totalAulas-totalInitialCount)/totalAulas)*100).toFixed(0)}%)`;
+        const overallProgressBarra = document.getElementById('progressoTotalBarra');
+        	    overallProgressBarra.value = overallProgress.toFixed(0);
+
+
+
+	// << render()	
         }
         
         function updateStatus(mIndex, aIndex) {
