@@ -512,7 +512,7 @@
         			materia.aulas.push({
         				status: 'inicial',
         				estudos: [],
-        				nome: materia.aulas.length,
+        				nome: materia.aulas[materia.aulas.length -1].nome + 1,
         				alerta: false
         			});
         			render();
