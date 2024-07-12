@@ -162,7 +162,7 @@
             color: white;
         }
         .border-estudando{
-        	border-right: #7cb516 3px solid;
+        	border: #7cb516 3px solid;
         }
         .questoes1,
         .questoes2,
@@ -224,7 +224,7 @@
         	position: relative;
             top: -1.5em;
         	margin-left: 2em;
-        	background-color: #39393942;
+        	background-color: #76428e42;
         }
         .upBtn{
            
@@ -271,6 +271,42 @@
             visibility: visible;
             border: 2px solid #444;
         }
+        
+        
+        progress::-webkit-progress-value {
+            background:#7cb516;
+        }
+        progress::-moz-progress-value {
+            background:#7cb516;
+        }
+        progress::-webkit-progress-bar{
+            background: #111;
+            padding: 0px;
+        }
+        progress::-moz-progress-bar {  
+            background: #111;
+            
+            padding: 0px;
+        }
+        progress {
+            display:block;
+            -webkit-appearance: none;
+            height: 2px;
+            width: 100%;
+            margin-top: 1em;
+        }
+        .progressMateriaTexto, #progressoTotalTexto{
+          margin-top: 2em;
+          color: #444;
+        }
+        #progressoTotalBarra::-webkit-progress-value {
+          background:#b826c8;
+        }
+        #progressoTotal{
+          margin-top: 2em;
+          margin-bottom:2em;
+        }
+        
         .streakDia{
           display: inline-block;
             width: 1.2em;
@@ -278,7 +314,7 @@
             border-radius: 4px;
             margin: .2em;
         }
-        
+
         .streakDia {
             display: inline-block;
             width: 30px;
@@ -287,7 +323,7 @@
             margin: 2px;
             position: relative;
         }
-        
+
         .dayName {
             position: absolute;
             top: -20px;
@@ -308,6 +344,8 @@
             font-size: 0.8em;
             color: #00000021;
         }
+
+        
     </style>
 </head>
 
@@ -321,7 +359,10 @@
 	    materias.push({ nome: `Matéria ${materias.length + 1}`, aulas: [] });
             render();
             save();">Adicionar Matéria</button>
-
+    <div id="progressoTotal">
+        <div id="progressoTotalTexto"></div>
+        <progress id="progressoTotalBarra" min="0" max="100"></progress>
+    </div>
     <details>
         <summary>exportar/importar</summary>
         <button class="button" onclick="copyToJson()">exportar</button>
@@ -337,6 +378,15 @@
             "aulas": []
           }
         ];
+        
+        const statusWeights = {
+        		    'inicial': 0,
+        		    'estudando': 10,
+        		    'questoes1': 50,
+        		    'questoes2': 75,
+        		    'questoes3': 85,
+        		    'revisao': 100 
+        		};
         
         function render() {
         	const app = document.getElementById('app');
@@ -504,7 +554,7 @@
         			materia.aulas.push({
         				status: 'inicial',
         				estudos: [],
-        				nome: materia.aulas.length,
+        				nome: materia.aulas[materia.aulas.length -1].nome + 1,
         				alerta: false
         			});
         			render();
@@ -513,17 +563,61 @@
         		materiaDiv.appendChild(addAulaBtn);
         
         		app.appendChild(materiaDiv);
+        
+        
+        
+        		
+        		
+        		if(materia.aulas.length > 0){
+        		const progress = materia.aulas.reduce((total, aula) => total + (statusWeights[aula.status] || 0), 0) / materia.aulas.length;
+        		
+        		const initialCount = materia.aulas.filter(aula => aula.status === 'inicial').length;
+        		const nonInitialCount = materia.aulas.length - initialCount;
+        		
+        		const progressDiv = document.createElement('div');
+        		progressDiv.textContent = `progresso: ${progress.toFixed(0)}% iniciadas: ${materia.aulas.length-initialCount}/${materia.aulas.length}(${(((materia.aulas.length-initialCount)/materia.aulas.length)*100).toFixed(0)}%) `;
+        		progressDiv.classList.add("progressMateriaTexto");
+        		materiaDiv.appendChild(progressDiv);
+        		
+        		const progressProgress = document.createElement('progress');
+        		progressProgress.min = 0;
+        		progressProgress.max = 100;
+        		progressProgress.value = progress.toFixed(0);
+        		progressProgress.classList.add("progressMateria");
+        		materiaDiv.appendChild(progressProgress);
+        		}
+        
+        		/// < materia
+        		
         	});
         
-        	if(selectedRadio){
-        		document.getElementById("m"+selectedRadio).checked = true;
-		}
-        
-        
-        renderStreak();
-        
-        // <<<<<<< RENDER()
         	
+        if(selectedRadio){document.getElementById("m"+selectedRadio).checked = true;}
+        
+		
+
+
+		
+	let totalProgress = 0;
+        let totalAulas = 0;
+        let totalInitialCount = 0;
+        
+        materias.forEach(materia => {
+            totalAulas += materia.aulas.length;
+            totalProgress += materia.aulas.reduce((total, aula) => total + (statusWeights[aula.status] || 0), 0);
+            totalInitialCount += materia.aulas.filter(aula => aula.status === 'inicial').length;
+        });
+        
+        const overallProgress = totalProgress / totalAulas;
+        
+        const overallProgressDiv = document.getElementById('progressoTotalTexto');
+        overallProgressDiv.textContent = `Progresso Total: ${overallProgress.toFixed(0)}% - iniciadas: ${totalAulas-totalInitialCount} de ${totalAulas} (${(((totalAulas-totalInitialCount)/totalAulas)*100).toFixed(0)}%)`;
+        const overallProgressBarra = document.getElementById('progressoTotalBarra');
+        	    overallProgressBarra.value = overallProgress.toFixed(0);
+
+
+        renderStreak();
+	// << render()	
         }
         
         function updateStatus(mIndex, aIndex) {
@@ -555,7 +649,7 @@
         	}
         	if (daysDiff < 3) {
         		aula.alerta = false;
-        		console.log(aula);
+        		//console.log(aula);
         	}
         	if (isNaN(daysDiff) && aula.status !== "estudando" && aula.status !== "inicial") {
         		aula.alerta = true;
@@ -572,10 +666,18 @@
         }
         
         function copyToJson() {
-        	document.getElementById('jsonArea').value = JSON.stringify(materias, null, 2);
+        	//document.getElementById('jsonArea').value = JSON.stringify(materias, null, 2);
+        
+            const replacer = (key, value) => {
+                if (key === 'alerta' || key === 'daysDiff') return undefined;
+                return value;
+            };
+            const dataStr = JSON.stringify(materias, replacer);
+            document.getElementById('jsonArea').value = dataStr;
         }
+        	    
         function exportToFile() {
-            const dataStr = JSON.stringify(materias, null, 2);
+            const dataStr = JSON.stringify(materias);
             const dataUri = 'data:text/plain;charset=utf-8,' + encodeURIComponent(dataStr);
             const exportFileDefaultName = 'estudos.txt';
             
@@ -595,14 +697,41 @@
         		save();
         		render();
         	} catch (e) {
-        		alert('JSON inválido!');
+        		//alert('erro'+e);
+        		console.log("Erro ao importar:")
+        		console.log(e);
         	}
         }
         
         
         	    
         render();
+        
+        
+        
         	    
+        let totalProgress = 0;
+        let totalAulas = 0;
+        let totalInitialCount = 0;
+        
+        materias.forEach(materia => {
+            totalAulas += materia.aulas.length;
+            totalProgress += materia.aulas.reduce((total, aula) => total + (statusWeights[aula.status] || 0), 0);
+            totalInitialCount += materia.aulas.filter(aula => aula.status === 'inicial').length;
+        });
+        
+        const overallProgress = totalProgress / totalAulas;
+        
+        const overallProgressDiv = document.getElementById('progressoTotalTexto');
+        overallProgressDiv.textContent = `Progresso Total: ${overallProgress.toFixed(0)}% - Não estudadas: ${totalInitialCount} de ${totalAulas} (${((totalInitialCount/totalAulas)*100).toFixed(0)}%)`;
+        const overallProgressBarra = document.getElementById('progressoTotalBarra');
+        	    overallProgressBarra.value = overallProgress.toFixed(0);
+        
+        	    
+        	    
+        document.querySelectorAll('input[type="radio"][name="onde"]').forEach(radio => {
+            radio.addEventListener('change', save);
+        });
         
         
         
@@ -616,19 +745,19 @@
         // Função para calcular streaks
         function calculateStreak(dates) {
             const streakDays = [0, 0, 0, 0, 0, 0, 0];
-            const streakEmojis = ["🤲🏽", "🌰", "🌱", "☘️", "🍀", "🌿", "🌲", "🎄", "🍓", "🌷", "🌹", "🌺", "🍪", "🪷"];
+            const streakEmojis = ["Vamos lá!","Já é um começo! 🤲🏽", "Plantando uma sementinha 🌰", "Para crescer 🌱", "Crescendo forte ☘️", "E com sorte! 🍀", "Criando raízes 🌿", "Florescendo em conhecimento 🌷", "Atingindo novas alturas 🌹", "Frutificando sucesso 🍓","Conhecimento eterno 🌲", "Sempre florescendo 🎄", "Doce recompensa 🍪", "Brilhando como a flor de lótus 🪷"];
             const currentDate = new Date();
             let currentStreak = 0;
             let maxStreak = 0;
             let streakEmoji = streakEmojis[0];
-        
+
             for (let i = 6; i >= 0; i--) {
                 const checkDate = new Date();
                 checkDate.setDate(currentDate.getDate() - i);
                 const dateStr = checkDate.toISOString().split('T')[0];
                 const count = dates.filter(date => date === dateStr).length;
                 streakDays[6 - i] = count;
-        
+
                 if (count > 0) {
                     currentStreak++;
                 } else {
@@ -638,49 +767,49 @@
             }
             maxStreak = Math.max(maxStreak, currentStreak);
             streakEmoji = streakEmojis[Math.min(maxStreak, streakEmojis.length - 1)];
-        
+
             return { streakDays, maxStreak, streakEmoji };
         }
-        
+
         function renderStreak() {
             // Colete todas as datas de estudo de todas as matérias e aulas
             const allDates = materias.flatMap(materia => materia.aulas.flatMap(aula => aula.estudos));
             console.log(allDates);
             const { streakDays, maxStreak, streakEmoji } = calculateStreak(allDates);
-        
+
             // Visualização de streak dos últimos 7 dias
             const streakDiv = document.getElementById('streakDays');
             streakDiv.textContent = '';
-            
+
             const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
             const currentDate = new Date();
-        
+
             streakDays.forEach((count, index) => {
                 const dayDiv = document.createElement('div');
                 dayDiv.className = 'streakDia';
-                
+
                 const maxCount = Math.max(...streakDays);
                 const minSaturation = 70;
                 const maxSaturation = 100;
                 const saturation = count > 0 ? minSaturation + (count - 1) * (maxSaturation - minSaturation) / maxCount : 0;
                 dayDiv.style.backgroundColor = count > 0 ? `hsl(81.51deg ${saturation}% 39.8%)` : '#464646';
-                
-                
+
+
                 const dayNameDiv = document.createElement('div');
                 const dayIndex = (currentDate.getDay() - 6 + index + 7) % 7; // Calcular o índice do dia da semana
                 dayNameDiv.textContent = dayNames[dayIndex];
                 dayNameDiv.className = 'dayName';
-                
+
                 dayDiv.appendChild(dayNameDiv);
-                
+
                 const dayCount = document.createElement('div');
                 dayCount.textContent = count;
                 dayCount.className = 'dayCount';
                 dayDiv.appendChild(dayCount);
-                
+
                 streakDiv.appendChild(dayDiv);
             });
-        
+
             // Visualização de contagem de dias seguidos
             const streakCountDiv = document.getElementById('streakInfo');
             streakCountDiv.textContent = `${maxStreak} dias seguidos! ${streakEmoji}`;
@@ -688,15 +817,6 @@
         
         
         
-        
-        
-        
-        
-        
-        	    
-        document.querySelectorAll('input[type="radio"][name="onde"]').forEach(radio => {
-            radio.addEventListener('change', save);
-        });
     </script>
 </body>
 
