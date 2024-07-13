@@ -757,7 +757,8 @@
             let currentStreak = 0;
             let maxStreak = 0;
             let streakEmoji = streakEmojis[0];
-		let todayStreak = false;
+	    let todayStreak = false;
+	    let yesterdayStreak = false;
 		
             for (let i = 6; i >= 0; i--) {
                 const checkDate = new Date();
@@ -766,10 +767,18 @@
                 const count = dates.filter(date => date === dateStr).length;
                 streakDays[6 - i] = count;
 
+		// hoje
+		if (i == 0 && count > 0) {
+		    todayStreak = true;
+		}
+		// ontem
+		if (i == 1 && count > 0) {
+		    yesterdayStreak = true;
+		}
+
+		    
                 if (count > 0) {
                     currentStreak++;
-                } else if (count == 0 && count > 0) {
-		    todayStreak = true;
 		} else {
                     maxStreak = Math.max(maxStreak, currentStreak);
                     currentStreak = 0;
@@ -778,14 +787,14 @@
             maxStreak = Math.max(maxStreak, currentStreak);
             streakEmoji = streakEmojis[Math.min(maxStreak, streakEmojis.length - 1)];
 
-            return { streakDays, maxStreak, streakEmoji, todayStreak };
+            return { streakDays, maxStreak, streakEmoji, todayStreak, yesterdayStreak };
         }
 
         function renderStreak() {
             // Colete todas as datas de estudo de todas as matérias e aulas
             const allDates = materias.flatMap(materia => materia.aulas.flatMap(aula => aula.estudos));
             console.log(allDates);
-            const { streakDays, maxStreak, streakEmoji, todayStreak } = calculateStreak(allDates);
+            const { streakDays, maxStreak, streakEmoji, todayStreak, yesterdayStreak } = calculateStreak(allDates);
 
             // Visualização de streak dos últimos 7 dias
             const streakDiv = document.getElementById('streakDays');
@@ -822,7 +831,11 @@
 
             // Visualização de contagem de dias seguidos
             const streakCountDiv = document.getElementById('streakInfo');
+		if(yesterdayStreak == false){
+		streakCountDiv.textContent = `Força e foco! Você vai conseguir! Comece aos poucos, mas de forma constante!`;
+		} else {
             streakCountDiv.textContent = `${maxStreak}${maxStreak == 1? ".º dia de muitos mais!": " dias seguidos!"} ${streakEmoji}`;
+		}
         }
         
         
