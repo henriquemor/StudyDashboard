@@ -831,10 +831,10 @@
 
             // Visualização de contagem de dias seguidos
             const streakCountDiv = document.getElementById('streakInfo');
-		if(yesterdayStreak == false){
+		if(yesterdayStreak == false && todayStreak == false){
 		streakCountDiv.textContent = `Força e foco! Você vai conseguir! Comece aos poucos, mas de forma constante!`;
 		} else {
-            streakCountDiv.textContent = `${maxStreak}${maxStreak == 1? ".º dia de muitos mais!": " dias seguidos!"} ${streakEmoji}`;
+            streakCountDiv.textContent = `${currentStreak}${maxStreak == 1? ".º dia de muitos mais!": " dias seguidos!"} ${streakEmoji}`;
 		}
         }
         
