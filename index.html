@@ -787,14 +787,14 @@
             maxStreak = Math.max(maxStreak, currentStreak);
             streakEmoji = streakEmojis[Math.min(maxStreak, streakEmojis.length - 1)];
 
-            return { streakDays, maxStreak, streakEmoji, todayStreak, yesterdayStreak };
+            return { streakDays, maxStreak, streakEmoji, currentStreak, todayStreak, yesterdayStreak };
         }
 
         function renderStreak() {
             // Colete todas as datas de estudo de todas as matérias e aulas
             const allDates = materias.flatMap(materia => materia.aulas.flatMap(aula => aula.estudos));
             console.log(allDates);
-            const { streakDays, maxStreak, streakEmoji, todayStreak, yesterdayStreak } = calculateStreak(allDates);
+            const { streakDays, maxStreak, streakEmoji, currentStreak, todayStreak, yesterdayStreak } = calculateStreak(allDates);
 
             // Visualização de streak dos últimos 7 dias
             const streakDiv = document.getElementById('streakDays');
