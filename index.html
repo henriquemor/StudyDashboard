@@ -752,7 +752,7 @@
         // Função para calcular streaks
         function calculateStreak(dates) {
             const streakDays = [0, 0, 0, 0, 0, 0, 0];
-            const streakEmojis = ["Vamos lá!","Já é um começo! 🤲🏽", "Plantando uma sementinha 🌰", "Para crescer 🌱", "Crescendo forte ☘️", "E com sorte! 🍀", "Criando raízes 🌿", "Florescendo em conhecimento 🌷", "Atingindo novas alturas 🌹", "Frutificando sucesso 🍓","Conhecimento eterno 🌲", "Sempre florescendo 🎄", "Doce recompensa 🍪", "Brilhando como a flor de lótus 🪷"];
+            const streakEmojis = ["Vamos lá! Foco!","Já é o começo! 🎉", "Plantando uma sementinha 🌰", "Para crescer 🌱", "Crescendo forte 🌿", "E com sorte! 🍀", "Frutificando sucesso 🍓", "Brilhando como a flor de lótus 🪷", "Atingindo novas alturas 🌲", "Criando raízes ", "Sempre florescendo 🎄", "Doce recompensa 🍪", "Brilhando como a flor de lótus 🪷"];
             const currentDate = new Date();
             let currentStreak = 0;
             let maxStreak = 0;
@@ -819,7 +819,7 @@
 
             // Visualização de contagem de dias seguidos
             const streakCountDiv = document.getElementById('streakInfo');
-            streakCountDiv.textContent = `${maxStreak} dias seguidos! ${streakEmoji}`;
+            streakCountDiv.textContent = `${maxStreak}${maxStreak == 1? ".º dia de muitos mais!": " dias seguidos!"} ${streakEmoji}`;
         }
         
         
