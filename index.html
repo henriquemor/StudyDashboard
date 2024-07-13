@@ -832,9 +832,11 @@
             // Visualização de contagem de dias seguidos
             const streakCountDiv = document.getElementById('streakInfo');
 		if(yesterdayStreak == false && todayStreak == false){
-		streakCountDiv.textContent = `Força e foco! Você vai conseguir! Comece aos poucos, mas de forma constante!`;
+			streakCountDiv.textContent = `Força e foco! Você vai conseguir! Comece aos poucos, mas de forma constante!`;
+		} else if(yesterdayStreak == true && todayStreak == false){
+			streakCountDiv.textContent = `Marque o estudo hoje para manter a contagem! Foco!`;
 		} else {
-            streakCountDiv.textContent = `${currentStreak}${currentStreak == 1? ".º dia de muitos mais!": " dias seguidos!"} ${streakEmoji}`;
+            		streakCountDiv.textContent = `${currentStreak}${currentStreak == 1? ".º dia de muitos mais!": " dias seguidos!"} ${streakEmoji}`;
 		}
         }
         
