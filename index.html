@@ -551,10 +551,11 @@
         		addAulaBtn.className = "addAula";
         		addAulaBtn.style = "padding: 1em; margin-top:1em";
         		addAulaBtn.onclick = () => {
+				let nomeAula = materia.aulas.length > 0 ? (materia.aulas[materia.aulas.length - 1].nome + 1) : 0;
         			materia.aulas.push({
         				status: 'inicial',
         				estudos: [],
-        				nome: materia.aulas[materia.aulas.length -1].nome + 1,
+        				nome: nomeAula,
         				alerta: false
         			});
         			render();
