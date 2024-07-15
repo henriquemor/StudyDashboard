@@ -769,7 +769,7 @@
             for (let i = 6; i >= 0; i--) {
                 const checkDate = new Date();
                 checkDate.setDate(currentDate.getDate() - i);
-                const dateStr = formatDate(new Date());
+                const dateStr = formatDate(checkDate);
                 const count = dates.filter(date => date === dateStr).length;
                 streakDays[6 - i] = count;
 
