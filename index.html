@@ -354,15 +354,16 @@
         <div id="streakDays"></div>
         <div id="streakInfo"></div>
     </div>
-    <div id="app"></div>
-    <button class="button addMateria" onclick="
-	    materias.push({ nome: `Matéria ${materias.length + 1}`, aulas: [] });
-            render();
-            save();">Adicionar Matéria</button>
     <div id="progressoTotal">
         <div id="progressoTotalTexto"></div>
         <progress id="progressoTotalBarra" min="0" max="100"></progress>
     </div>
+    <div id="app"></div>
+    <button class="button addMateria" onclick="
+	    materias.push({ nome: `Matéria ${materias.length + 1}`, aulas: [] });
+            render();
+            save();">Adicionar Matéria
+    </button>
     <details>
         <summary>exportar/importar</summary>
         <button class="button" onclick="copyToJson()">exportar</button>
