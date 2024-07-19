@@ -757,9 +757,61 @@
         
         
         // Função para calcular streaks
+function calculateCurrentStreak(dates) {
+    const uniqueDates = [...new Set(dates)];
+    uniqueDates.sort((a, b) => new Date(a) - new Date(b));
+    const currentDate = new Date();
+    let currentStreak = 0;
+
+    for (let i = 0; i < uniqueDates.length; i++) {
+        const checkDate = new Date();
+        checkDate.setDate(currentDate.getDate() - i);
+	const dateStr = formatDate(checkDate);
+
+        if (uniqueDates.includes(dateStr)) {
+            currentStreak++;
+        } else if (i > 1 || !uniqueDates.includes(dateStr)) {
+            break;
+        }
+    }
+
+    return currentStreak;
+}
+
+
+
+
+
+
+	    
         function calculateStreak(dates) {
             const streakDays = [0, 0, 0, 0, 0, 0, 0];
-            const streakEmojis = ["Vamos lá! Foco!","Já é o começo! 🎉", "Plantando uma sementinha 🌰", "Sementinha que está crescendo 🌱", "Crescendo forte 🌿", "E com sorte! 🍀", "Frutificando sucesso 🍓", "Brilhando como a flor de lótus 🪷", "Atingindo novas alturas 🌲", "Criando raízes ", "Sempre florescendo 🎄", "Doce recompensa 🍪", "Brilhando como a flor de lótus 🪷"];
+            const streakEmojis = 
+		    ["Vamos lá! Foco!",
+		     "Já é o começo! 🎉", 
+		     "Plantando uma sementinha 🌰", 
+		     "Sementinha que está crescendo 🌱", 
+		     "Crescendo forte 🌿", 
+		     "Forte e com sorte! 🍀", 
+		     "Frutificando sucesso 🍓", 
+		     "Brilhando como a flor de lótus 🪷",
+		     "Doce recompensa 🍪", 
+		     "Acredite no seu potencial 🌟",
+		     "Você é capaz de tudo! 🚀",
+		     "Cultive o hábito do sucesso 🌱",
+		     "Todo dia é uma nova chance 🌈",
+		     "Cada passo conta 📚",
+		     "Criando raízes 🧠", 
+		     "Sempre florescendo 🎄",
+		     "Seja o seu melhor ✨",
+		     "Cresça a cada dia 🌻",
+		     "Atingindo novas alturas 🌲",
+		     "Curiosidade é a essência 🔍",
+		     "Transforme o mundo com conhecimento 🌍",
+		     "Rumo à vitória! 🏆",
+		     "Conhecimento é poder 📚",
+		     "Busque conhecimento 🛸"
+		    ];
             const currentDate = new Date();
             let currentStreak = 0;
             let maxStreak = 0;
@@ -784,7 +836,8 @@
 		}
 
 		    
-                if (count > 0) {
+                /*
+		if (count > 0) {
                     currentStreak++;
 		} else {
 		    if(i == 0){
@@ -795,8 +848,14 @@
                         currentStreak = 0;
 		    }
                 }
+		*/
+		
+		    
             }
-            maxStreak = Math.max(maxStreak, currentStreak);
+
+	    currentStreak = calculateCurrentStreak(dates);
+	    maxStreak = currentStreak;
+            //maxStreak = Math.max(maxStreak, currentStreak);
             streakEmoji = streakEmojis[Math.min(currentStreak, streakEmojis.length - 1)];
 
             return { streakDays, maxStreak, streakEmoji, currentStreak, todayStreak, yesterdayStreak };
