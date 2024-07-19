@@ -760,8 +760,8 @@
 function calculateCurrentStreak(dates) {
     const uniqueDates = [...new Set(dates)];
     uniqueDates.sort((a, b) => new Date(a) - new Date(b));
-    const debug = document.getElementById('jsonArea').value; //para debug
-    debug = uniqueDates;
+    const debug = document.getElementById('jsonArea'); //para debug
+    debug.value = uniqueDates;
     const currentDate = new Date();
     let currentStreak = 0;
 
@@ -769,7 +769,7 @@ function calculateCurrentStreak(dates) {
         const checkDate = new Date();
         checkDate.setDate(currentDate.getDate() - i);
 	const dateStr = formatDate(checkDate);
-        debug += "\n >>> i=" + i + " dateStr=" + dateStr + " includes?" + uniqueDates.includes(dateStr);
+        debug.value += "\n >>> i=" + i + " dateStr=" + dateStr + " includes?" + uniqueDates.includes(dateStr);
         if (uniqueDates.includes(dateStr)) {
             currentStreak++;
         } else if (i > 1) {
