@@ -760,7 +760,7 @@
 function calculateCurrentStreak(dates) {
     const uniqueDates = [...new Set(dates)];
     uniqueDates.sort((a, b) => new Date(a) - new Date(b));
-    document.getElementById('jsonArea').value = uniqueDates;
+    //document.getElementById('jsonArea').value = uniqueDates; //para debug
     const currentDate = new Date();
     let currentStreak = 0;
 
@@ -775,15 +775,9 @@ function calculateCurrentStreak(dates) {
             break;
         }
     }
-document.getElementById('jsonArea').value = document.getElementById('jsonArea').value + currentStreak;
+    //document.getElementById('jsonArea').value = document.getElementById('jsonArea').value + currentStreak;
     return currentStreak;
 }
-
-
-
-
-
-
 	    
         function calculateStreak(dates) {
             const streakDays = [0, 0, 0, 0, 0, 0, 0];
@@ -904,9 +898,9 @@ document.getElementById('jsonArea').value = document.getElementById('jsonArea').
             // Visualização de contagem de dias seguidos
             const streakCountDiv = document.getElementById('streakInfo');
 		if(yesterdayStreak == false && todayStreak == false){
-			streakCountDiv.innerHTML = `Força e foco! Você vai conseguir! Comece aos poucos, mas de forma constante!`;
+			streakCountDiv.innerHTML = `Força e foco! Você vai conseguir! Comece aos poucos, mas com regularidade!`;
 		} else if(yesterdayStreak == true && todayStreak == false){
-			streakCountDiv.innerHTML = `${streakEmoji}<br>Marque o estudo hoje para manter a contagem! Foco!`;
+			streakCountDiv.innerHTML = `${streakEmoji}<br>${currentStreak}${currentStreak == 1? ".º dia de muitos mais!": " dias seguidos!"}<br>Marque o estudo hoje para manter a contagem! Foco!`;
 		} else {
             		streakCountDiv.innerHTML = `${streakEmoji}<br>${currentStreak}${currentStreak == 1? ".º dia de muitos mais!": " dias seguidos!"}`;
 		}
