@@ -587,7 +587,7 @@
         		const nonInitialCount = materia.aulas.length - initialCount;
         		
         		const progressDiv = document.createElement('div');
-        		progressDiv.textContent = `${progress.toFixed(0)}% de progresso na matéria / ${materia.aulas.length-initialCount}/${materia.aulas.length}(${(((materia.aulas.length-initialCount)/materia.aulas.length)*100).toFixed(0)}%) das aulas iniciadas`;
+        		progressDiv.textContent = `${progress.toFixed(0)}% de progresso na matéria. Aulas iniciadas: ${materia.aulas.length-initialCount}/${materia.aulas.length}(${(((materia.aulas.length-initialCount)/materia.aulas.length)*100).toFixed(0)}%)`;
         		progressDiv.classList.add("progressMateriaTexto");
         		materiaDiv.appendChild(progressDiv);
         		
