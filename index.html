@@ -299,6 +299,10 @@
           margin-top: 2em;
           color: #444;
         }
+	.progressMateriaTexto:hover, #progressoTotalTexto:hover{
+          color: #ddd;
+        }
+	    
         #progressoTotalBarra::-webkit-progress-value {
           background:#b826c8;
         }
@@ -583,7 +587,7 @@
         		const nonInitialCount = materia.aulas.length - initialCount;
         		
         		const progressDiv = document.createElement('div');
-        		progressDiv.textContent = `progresso: ${progress.toFixed(0)}% iniciadas: ${materia.aulas.length-initialCount}/${materia.aulas.length}(${(((materia.aulas.length-initialCount)/materia.aulas.length)*100).toFixed(0)}%) `;
+        		progressDiv.textContent = `${progress.toFixed(0)}% de progresso na matéria / ${materia.aulas.length-initialCount}/${materia.aulas.length}(${(((materia.aulas.length-initialCount)/materia.aulas.length)*100).toFixed(0)}%) das aulas iniciadas`;
         		progressDiv.classList.add("progressMateriaTexto");
         		materiaDiv.appendChild(progressDiv);
         		
