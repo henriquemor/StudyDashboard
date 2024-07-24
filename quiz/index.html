@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        font-family: verdana;
+        background-color: #222;
+        color: #eee;
+      }
+      input[type='text'] {
+        font-size: 18px;
+        margin-bottom: 10px;
+        display: block;
+        color: white;
+        background-color: #000;
+        border: 1px solid #888;
+        padding: 6px;
+        width: 100%;
+      }
+      textarea {
+        background-color: #000;
+        width: 100%;
+        color: white;
+      }
+      #newQuestion,
+      #dataText {
+        height: 10em;
+        margin-top: 3em;
+      }
+      #responses {
+        margin: 1em 0;
+      }
+      #responses div {
+        margin-top: 0.3em;
+      }
+      button {
+        font-size: 1em;
+        background-color: #444;
+        color: white;
+        border: none;
+        border-radius: 7px;
+        padding: 0.6em;
+      }
+      .question {
+        cursor: pointer;
+        margin: 10px 0;
+        color: #ddd;
+        padding: 0.3em;
+        border-radius: 3px;
+        background-color: #444;
+      }
+      .question-details {
+        display: none;
+        background-color: #333;
+        padding: 1em 0.3em;
+      }
+      .response {
+        display: flex;
+        align-items: center;
+      }
+      .response span {
+        margin-left: 10px;
+      }
+      .response[data-score='low'] {
+        color: red;
+      }
+      .response[data-score='high'] {
+        color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="current-question"></div>
+    <div id="questions"></div>
+    <textarea
+      id="newQuestion"
+      rows="5"
+      placeholder="Nova questão e respostas..."
+    ></textarea>
+    <button onclick="addQuestion()">Salvar Questão</button>
+    <summary>
+      <textarea
+        id="dataText"
+        rows="5"
+        placeholder="Dados para importar/exportar..."
+      ></textarea>
+      <button onclick="exportData()">Exportar</button>
+      <button onclick="importData()">Importar</button>
+    </summary>
+    <script>
+      let questions = [];
+
+      function saveToLocalStorage() {
+        localStorage.setItem('questions', JSON.stringify(questions));
+      }
+      function formatDate(date) {
+        let dateString =
+          date.getFullYear() +
+          '-' +
+          String(date.getMonth() + 1).padStart(2, '0') +
+          '-' +
+          String(date.getDate()).padStart(2, '0');
+        return dateString;
+      }
+      function loadFromLocalStorage() {
+        const savedQuestions = localStorage.getItem('questions');
+        if (savedQuestions) {
+          questions = JSON.parse(savedQuestions);
+        }
+      }
+
+      function renderQuestions() {
+        const questionsDiv = document.getElementById('questions');
+        questionsDiv.innerHTML = '';
+        questions.forEach((q, i) => {
+          const questionDiv = document.createElement('div');
+          questionDiv.className = 'question';
+          questionDiv.innerHTML = `${q.question} (${
+            q.lastStudy
+              ? Math.floor(
+                  (new Date() - new Date(q.lastStudy)) / (1000 * 60 * 60 * 24)
+                )
+              : '-'
+          })`; // mostrar quantos  dias desde o último estudo ou - caso nunca est udado
+          questionDiv.onclick = () => showQuestionDetails(i);
+          questionsDiv.appendChild(questionDiv);
+        });
+      }
+
+      function showQuestionDetails(index) {
+        questions.forEach((q) =>
+          q.responses.forEach((r) => (r.revealed = false))
+        );
+
+        const q = questions[index];
+        const questionDiv = document.createElement('div');
+        questionDiv.className = 'question-details';
+        questionDiv.style.display = 'block';
+        questionDiv.innerHTML = `
+                <h2>${q.question}</h2>
+                <input type="text" id="answerInput">
+                <button id="checkAnswerBtn" onclick="checkAnswer(${index})">Enviar</button>
+                <div id="responses"></div>
+                <button id="revealAllBtn" onclick="revealAll(${index})">Revelar Todos</button>
+            `;
+        const currentQuestionDiv = document.getElementById('current-question');
+        currentQuestionDiv.innerHTML = '';
+        currentQuestionDiv.appendChild(questionDiv);
+        renderResponses(index);
+      }
+
+      function renderResponses(index) {
+        const q = questions[index];
+        const responsesDiv = document.getElementById('responses');
+        responsesDiv.innerHTML = '';
+        q.responses.forEach((r, i) => {
+          const responseDiv = document.createElement('div');
+          responseDiv.className = 'response';
+          responseDiv.dataset.score =
+            r.score < 0 ? 'low' : r.score > 10 ? 'high' : '';
+          responseDiv.innerHTML = `
+                    • 
+                    <span id="response${i}">${
+            r.revealed ? r.text : ''
+          }</span>  (${r.score})
+                `;
+          responsesDiv.appendChild(responseDiv);
+        });
+      }
+
+      function checkAnswer(index) {
+        const q = questions[index];
+        const input = document.getElementById('answerInput').value;
+        q.responses.forEach((r, i) => {
+          if (r.text.includes(input) && !r.revealed) {
+            //document.getElementById(`response${i}`).innerText = r.text;
+            r.acertada += 1;
+            r.score += q.responses.length;
+            //if (!r.dataAcerto) r.dataAcerto = [];
+            r.dataAcerto.push(formatDate(new Date()));
+            r.revealed = true;
+          }
+        });
+        document.getElementById('answerInput').value = '';
+        renderResponses(index);
+        saveToLocalStorage();
+      }
+
+      function revealAll(index) {
+        const q = questions[index];
+        q.responses.forEach((r, i) => {
+          if (!document.getElementById(`response${i}`).innerText) {
+            document.getElementById(`response${i}`).innerText = r.text;
+            r.errada += 1;
+            r.score -= 2;
+            if (!r.dataErro) r.dataErro = [];
+            r.dataErro.push(new Date().toISOString());
+            r.revealed = true;
+          }
+        });
+        q.lastStudy = formatDate(new Date());
+        renderResponses(index);
+        document.getElementById('answerInput').disabled = true;
+        document.getElementById('checkAnswerBtn').disabled = true;
+        document.getElementById('revealAllBtn').disabled = true;
+        saveToLocalStorage();
+      }
+
+      function addQuestion() {
+        const input = document.getElementById('newQuestion').value;
+        const lines = input.split('\n');
+        const question = lines[0];
+        const responses = lines.slice(1).map((line) => ({
+          text: line,
+          acertada: 0,
+          errada: 0,
+          dataAcerto: [],
+          dataErro: [],
+          score: 0,
+          revealed: false,
+        }));
+        questions.push({ question, responses });
+        renderQuestions();
+        document.getElementById('newQuestion').value = '';
+        saveToLocalStorage();
+      }
+
+      function exportData() {
+        const dataText = document.getElementById('dataText');
+        dataText.value = JSON.stringify(questions);
+      }
+
+      function importData() {
+        const dataText = document.getElementById('dataText');
+        questions = JSON.parse(dataText.value);
+        renderQuestions();
+        saveToLocalStorage();
+      }
+
+      loadFromLocalStorage();
+      renderQuestions();
+    </script>
+  </body>
+</html>
