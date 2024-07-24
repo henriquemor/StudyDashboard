@@ -47,6 +47,11 @@
         border-radius: 7px;
         padding: 0.6em;
       }
+      button[disabled], input[disabled]{
+        background-color: #555;
+        color: #888;
+        display: none;
+      }
       .question {
         cursor: pointer;
         margin: 10px 0;
@@ -114,6 +119,30 @@
           questions = JSON.parse(savedQuestions);
         }
       }
+      function revealPartial(index, responseIndex) {
+        const response = questions[index].responses[responseIndex];
+        if (!response.partialText) {
+          response.partialText = response.text
+            .split(' ')
+            .map((word) => word[0])
+            .join(' ');
+        } else {
+          response.partialText = response.text
+            .split(' ')
+            .map((word, i) =>
+              word.slice(
+                0,
+                Math.min(
+                  word.length,
+                  response.partialText.split(' ')[i].length + 1
+                )
+              )
+            )
+            .join(' ');
+        }
+        //document.getElementById(`response${responseIndex}`).innerText =  response.partialText;
+        renderResponses(index);
+      }
 
       function renderQuestions() {
         const questionsDiv = document.getElementById('questions');
@@ -135,7 +164,10 @@
 
       function showQuestionDetails(index) {
         questions.forEach((q) =>
-          q.responses.forEach((r) => (r.revealed = false))
+          q.responses.forEach((r) => {
+            r.revealed = false;
+            r.partialText = ""
+          })
         );
 
         const q = questions[index];
@@ -167,9 +199,10 @@
           responseDiv.innerHTML = `
                     • 
                     <span id="response${i}">${
-            r.revealed ? r.text : ''
+            r.revealed ? r.text : r.partialText || ''
           }</span>  (${r.score})
                 `;
+          responseDiv.onclick = () => revealPartial(index, i);
           responsesDiv.appendChild(responseDiv);
         });
       }
@@ -178,7 +211,7 @@
         const q = questions[index];
         const input = document.getElementById('answerInput').value;
         q.responses.forEach((r, i) => {
-          if (r.text.includes(input) && !r.revealed) {
+          if (r.text.toLowerCase().includes(input.toLowerCase()) && !r.revealed) {
             //document.getElementById(`response${i}`).innerText = r.text;
             r.acertada += 1;
             r.score += q.responses.length;
@@ -195,12 +228,10 @@
       function revealAll(index) {
         const q = questions[index];
         q.responses.forEach((r, i) => {
-          if (!document.getElementById(`response${i}`).innerText) {
-            document.getElementById(`response${i}`).innerText = r.text;
+          if (!r.revealed) {
             r.errada += 1;
             r.score -= 2;
-            if (!r.dataErro) r.dataErro = [];
-            r.dataErro.push(new Date().toISOString());
+            r.dataErro.push(formatDate(new Date()));
             r.revealed = true;
           }
         });
