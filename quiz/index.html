@@ -210,7 +210,8 @@
 
             //document.getElementById(`response${i}`).innerText = r.text;
             r.acertada += 1;
-            let scoreToAdd = (q.responses.length) - q.resolvidas;
+            //let scoreToAdd = (q.responses.length) - q.resolvidas;
+            let scoreToAdd = 4;
             
             q.resolvidas += 1;
             if (r.revealClicks) {
@@ -241,6 +242,7 @@
         document.getElementById('answerInput').disabled = true;
         document.getElementById('checkAnswerBtn').disabled = true;
         document.getElementById('revealAllBtn').disabled = true;
+        renderQuestions();
         saveToLocalStorage();
       }
 
@@ -280,3 +282,4 @@
     </script>
   </body>
 </html>
+
