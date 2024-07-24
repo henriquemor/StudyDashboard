@@ -120,27 +120,17 @@
         }
       }
       function revealPartial(index, responseIndex) {
-        const response = questions[index].responses[responseIndex];
-        if (!response.partialText) {
-          response.partialText = response.text
-            .split(' ')
-            .map((word) => word[0])
-            .join(' ');
-        } else {
-          response.partialText = response.text
-            .split(' ')
-            .map((word, i) =>
-              word.slice(
-                0,
-                Math.min(
-                  word.length,
-                  response.partialText.split(' ')[i].length + 1
-                )
-              )
-            )
-            .join(' ');
-        }
-        //document.getElementById(`response${responseIndex}`).innerText =  response.partialText;
+    const response = questions[index].responses[responseIndex];
+    if (!response.partialText) {
+        response.partialText = response.text.split(' ').map(word => word[0] + '_'.repeat(word.length - 1)).join(' ');
+        response.revealClicks = 1;
+    } else {
+        response.revealClicks += 1;
+        response.partialText = response.text.split(' ').map((word, i) => {
+            const revealedLength = Math.min(word.length, response.revealClicks);
+            return word.slice(0, revealedLength) + '_'.repeat(word.length - revealedLength);
+        }).join(' ');
+    }
         renderResponses(index);
       }
 
@@ -163,6 +153,7 @@
       }
 
       function showQuestionDetails(index) {
+        
         questions.forEach((q) =>
           q.responses.forEach((r) => {
             r.revealed = false;
@@ -171,6 +162,7 @@
         );
 
         const q = questions[index];
+        q.resolvidas = 0;
         const questionDiv = document.createElement('div');
         questionDiv.className = 'question-details';
         questionDiv.style.display = 'block';
@@ -199,8 +191,8 @@
           responseDiv.innerHTML = `
                     • 
                     <span id="response${i}">${
-            r.revealed ? r.text : r.partialText || ''
-          }</span>  (${r.score})
+            r.revealed ? r.text + '&nbsp;👀' : r.partialText || ''
+          }</span>&nbsp;(${r.score})
                 `;
           responseDiv.onclick = () => revealPartial(index, i);
           responsesDiv.appendChild(responseDiv);
@@ -210,12 +202,21 @@
       function checkAnswer(index) {
         const q = questions[index];
         const input = document.getElementById('answerInput').value;
+        
         q.responses.forEach((r, i) => {
           if (r.text.toLowerCase().includes(input.toLowerCase()) && !r.revealed) {
+            
+            
+
             //document.getElementById(`response${i}`).innerText = r.text;
             r.acertada += 1;
-            r.score += q.responses.length;
-            //if (!r.dataAcerto) r.dataAcerto = [];
+            let scoreToAdd = (q.responses.length) - q.resolvidas;
+            
+            q.resolvidas += 1;
+            if (r.revealClicks) {
+                scoreToAdd -= r.revealClicks;
+            }
+            r.score += Math.max(scoreToAdd, 0); // Garante que o score não diminua indevidamente
             r.dataAcerto.push(formatDate(new Date()));
             r.revealed = true;
           }
