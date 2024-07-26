@@ -28,6 +28,11 @@
         width: 100%;
         color: white;
       }
+      .oculto {
+        color: #888;
+        margin: none;
+        display: inline-block;
+      }
       #newQuestion,
       #dataText {
         height: 10em;
@@ -47,7 +52,8 @@
         border-radius: 7px;
         padding: 0.6em;
       }
-      button[disabled], input[disabled]{
+      button[disabled],
+      input[disabled] {
         background-color: #555;
         color: #888;
         display: none;
@@ -119,19 +125,100 @@
           questions = JSON.parse(savedQuestions);
         }
       }
+      function renderResponses(index) {
+        const q = questions[index];
+        const responsesDiv = document.getElementById('responses');
+        responsesDiv.innerHTML = '';
+        q.responses.forEach((r, i) => {
+          const responseDiv = document.createElement('div');
+          responseDiv.className = 'response';
+          responseDiv.dataset.score =
+            r.score < 0 ? 'low' : r.score > 10 ? 'high' : '';
+          responseDiv.innerHTML = `
+            • <span id="response${i}">${
+            r.revealed ? r.text : r.partialText || ''
+          }</span> (${r.score})
+        `;
+          responseDiv.onclick = () => revealPartial(index, i);
+          responsesDiv.appendChild(responseDiv);
+        });
+      }
+
       function revealPartial(index, responseIndex) {
-    const response = questions[index].responses[responseIndex];
-    if (!response.partialText) {
-        response.partialText = response.text.split(' ').map(word => word[0] + '_'.repeat(word.length - 1)).join(' ');
-        response.revealClicks = 1;
-    } else {
-        response.revealClicks += 1;
-        response.partialText = response.text.split(' ').map((word, i) => {
-            const revealedLength = Math.min(word.length, response.revealClicks);
-            return word.slice(0, revealedLength) + '_'.repeat(word.length - revealedLength);
-        }).join(' ');
-    }
+        const response = questions[index].responses[responseIndex];
+        const revealChars = (text, revealLength) => {
+          let result = '';
+          let inParen = false;
+          let currentWord = '';
+          let words = [];
+
+          // Primeiro, separe o texto em palavras, considerando os parênteses como uma única palavra
+          for (let i = 0; i < text.length; i++) {
+            const char = text[i];
+
+            if (char === '(') {
+              inParen = true;
+              if (currentWord) {
+                words.push(currentWord);
+                currentWord = '';
+              }
+              currentWord += char;
+            } else if (char === ')') {
+              inParen = false;
+              currentWord += char;
+              words.push(currentWord);
+              currentWord = '';
+            } else if (char === ' ' && !inParen) {
+              if (currentWord) {
+                words.push(currentWord);
+                currentWord = '';
+              }
+            } else {
+              currentWord += char;
+            }
+          }
+          if (currentWord) {
+            words.push(currentWord);
+          }
+
+          // Agora, revele as letras conforme o comprimento especificado
+          result = words
+            .map((word) => {
+              if (word.startsWith('(') && word.endsWith(')')) {
+                return word;
+              }
+              const revealedLength = Math.min(word.length, revealLength);
+              const revealed = word.slice(0, revealedLength);
+              const hidden = word.slice(revealedLength).replace(/./g, '_');
+              return (
+                revealed + (hidden ? `<div class="oculto">${hidden}</div>` : '')
+              );
+            })
+            .join(' ');
+
+          return result;
+        };
+
+        // Exemplo de uso
+        const text = 'teste (teste teste) teste';
+        const revealLength = 1; // Primeira revelação
+
+        const revealedText = revealChars(text, revealLength);
+        console.log(revealedText);
+
+        if (!response.partialText) {
+          response.revealClicks = 0;
+          response.partialText = revealChars(response.text, 0);
+        } else {
+          response.revealClicks += 1;
+          response.partialText = revealChars(
+            response.text,
+            response.revealClicks
+          );
+        }
+
         renderResponses(index);
+        saveToLocalStorage();
       }
 
       function renderQuestions() {
@@ -153,11 +240,10 @@
       }
 
       function showQuestionDetails(index) {
-        
         questions.forEach((q) =>
           q.responses.forEach((r) => {
             r.revealed = false;
-            r.partialText = ""
+            r.partialText = '';
           })
         );
 
@@ -168,7 +254,7 @@
         questionDiv.style.display = 'block';
         questionDiv.innerHTML = `
                 <h2>${q.question}</h2>
-                <input type="text" id="answerInput">
+                <input type="text" id="answerInput" data-index="${index}">
                 <button id="checkAnswerBtn" onclick="checkAnswer(${index})">Enviar</button>
                 <div id="responses"></div>
                 <button id="revealAllBtn" onclick="revealAll(${index})">Revelar Todos</button>
@@ -177,45 +263,33 @@
         currentQuestionDiv.innerHTML = '';
         currentQuestionDiv.appendChild(questionDiv);
         renderResponses(index);
-      }
 
-      function renderResponses(index) {
-        const q = questions[index];
-        const responsesDiv = document.getElementById('responses');
-        responsesDiv.innerHTML = '';
-        q.responses.forEach((r, i) => {
-          const responseDiv = document.createElement('div');
-          responseDiv.className = 'response';
-          responseDiv.dataset.score =
-            r.score < 0 ? 'low' : r.score > 10 ? 'high' : '';
-          responseDiv.innerHTML = `
-                    • 
-                    <span id="response${i}">${
-            r.revealed ? r.text + '&nbsp;👀' : r.partialText || ''
-          }</span>&nbsp;(${r.score})
-                `;
-          responseDiv.onclick = () => revealPartial(index, i);
-          responsesDiv.appendChild(responseDiv);
-        });
+        document
+          .getElementById('answerInput')
+          .addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+              checkAnswer(this.dataset.index);
+            }
+          });
       }
 
       function checkAnswer(index) {
         const q = questions[index];
         const input = document.getElementById('answerInput').value;
-        
-        q.responses.forEach((r, i) => {
-          if (r.text.toLowerCase().includes(input.toLowerCase()) && !r.revealed) {
-            
-            
 
+        q.responses.forEach((r, i) => {
+          if (
+            r.text.toLowerCase().includes(input.toLowerCase()) &&
+            !r.revealed
+          ) {
             //document.getElementById(`response${i}`).innerText = r.text;
             r.acertada += 1;
             //let scoreToAdd = (q.responses.length) - q.resolvidas;
             let scoreToAdd = 4;
-            
+
             q.resolvidas += 1;
             if (r.revealClicks) {
-                scoreToAdd -= r.revealClicks;
+              scoreToAdd -= r.revealClicks;
             }
             r.score += Math.max(scoreToAdd, 0); // Garante que o score não diminua indevidamente
             r.dataAcerto.push(formatDate(new Date()));
@@ -282,4 +356,3 @@
     </script>
   </body>
 </html>
-
