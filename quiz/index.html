@@ -233,10 +233,23 @@
                   (new Date() - new Date(q.lastStudy)) / (1000 * 60 * 60 * 24)
                 )
               : '-'
-          })`; // mostrar quantos  dias desde o último estudo ou - caso nunca est udado
+          })
+          <button onclick="confirmDelete(${i})">Deletar</button>`; // mostrar quantos  dias desde o último estudo ou - caso nunca est udado
           questionDiv.onclick = () => showQuestionDetails(i);
           questionsDiv.appendChild(questionDiv);
         });
+      }
+
+      function confirmDelete(index) {
+        if (confirm('Tem certeza que deseja deletar esta pergunta?')) {
+          deleteQuestion(index);
+        }
+      }
+
+      function deleteQuestion(index) {
+        questions.splice(index, 1);
+        renderQuestions();
+        saveToLocalStorage();
       }
 
       function showQuestionDetails(index) {
@@ -340,8 +353,14 @@
       }
 
       function exportData() {
+        const replacer = (key, value) => {
+          if (key === 'partialText' || key === 'revealed'|| key === 'revealClicks') return undefined;
+          return value;
+        };
+        
+
         const dataText = document.getElementById('dataText');
-        dataText.value = JSON.stringify(questions);
+        dataText.value = JSON.stringify(questions,replacer);
       }
 
       function importData() {
