@@ -233,7 +233,13 @@
         categories[category].push({ question: q, index: i });
     });
 
-    for (const category in categories) {
+    const sortedCategories = Object.keys(categories).sort((a, b) => {
+        if (a === 'Sem Categoria') return 1;
+        if (b === 'Sem Categoria') return -1;
+        return a.localeCompare(b);
+    });
+
+    sortedCategories.forEach(category => {
         const categoryDiv = document.createElement('div');
         categoryDiv.innerHTML = `<h3>${category}</h3>`;
         categories[category].forEach(({ question, index }) => {
@@ -256,7 +262,7 @@
             categoryDiv.appendChild(questionDiv);
         });
         questionsDiv.appendChild(categoryDiv);
-    }
+    });
 }
 
 function editCategory(index) {
