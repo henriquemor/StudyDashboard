@@ -199,13 +199,6 @@
           return result;
         };
 
-        // Exemplo de uso
-        const text = 'teste (teste teste) teste';
-        const revealLength = 1; // Primeira revelação
-
-        const revealedText = revealChars(text, revealLength);
-        console.log(revealedText);
-
         if (!response.partialText) {
           response.revealClicks = 0;
           response.partialText = revealChars(response.text, 0);
@@ -291,6 +284,7 @@ function editCategory(index) {
           q.responses.forEach((r) => {
             r.revealed = false;
             r.partialText = '';
+            r.revealClicks = 0;
           })
         );
 
@@ -302,9 +296,9 @@ function editCategory(index) {
         questionDiv.innerHTML = `
                 <h2>${q.question}</h2>
                 <input type="text" id="answerInput" data-index="${index}">
-                <button id="checkAnswerBtn" onclick="checkAnswer(${index})">Enviar</button>
+                <button id="checkAnswerBtn" onclick="checkAnswer(${index})">Verificar</button>
                 <div id="responses"></div>
-                <button id="revealAllBtn" onclick="revealAll(${index})">Revelar Todos</button>
+                <button id="revealAllBtn" onclick="revealAll(${index})">Revelar Todos / Terminar</button>
                 <button onclick="document.getElementById('current-question').innerHTML = ''">Fechar</button>
             `;
         const currentQuestionDiv = document.getElementById('current-question');
