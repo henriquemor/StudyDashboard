@@ -222,23 +222,51 @@
       }
 
       function renderQuestions() {
-        const questionsDiv = document.getElementById('questions');
-        questionsDiv.innerHTML = '';
-        questions.forEach((q, i) => {
-          const questionDiv = document.createElement('div');
-          questionDiv.className = 'question';
-          questionDiv.innerHTML = `${q.question} (${
-            q.lastStudy
-              ? Math.floor(
-                  (new Date() - new Date(q.lastStudy)) / (1000 * 60 * 60 * 24)
-                )
-              : '-'
-          })
-          <button onclick="confirmDelete(${i})">Deletar</button>`; // mostrar quantos  dias desde o último estudo ou - caso nunca est udado
-          questionDiv.onclick = () => showQuestionDetails(i);
-          questionsDiv.appendChild(questionDiv);
+    const questionsDiv = document.getElementById('questions');
+    questionsDiv.innerHTML = '';
+
+    const categories = {};
+
+    questions.forEach((q, i) => {
+        const category = q.category || 'Sem Categoria';
+        if (!categories[category]) categories[category] = [];
+        categories[category].push({ question: q, index: i });
+    });
+
+    for (const category in categories) {
+        const categoryDiv = document.createElement('div');
+        categoryDiv.innerHTML = `<h3>${category}</h3>`;
+        categories[category].forEach(({ question, index }) => {
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question';
+            questionDiv.innerHTML = `
+                ${question.question} (${
+                    question.lastStudy
+                    ? Math.floor((new Date() - new Date(question.lastStudy)) / (1000 * 60 * 60 * 24))
+                    : '-'
+                })
+                <button onclick="confirmDelete(${index})">Deletar</button>
+                <button onclick="editCategory(${index})">Categoria</button>
+            `;
+            questionDiv.onclick = (event) => {
+                if (event.target.tagName !== 'BUTTON') {
+                    showQuestionDetails(index);
+                }
+            };
+            categoryDiv.appendChild(questionDiv);
         });
-      }
+        questionsDiv.appendChild(categoryDiv);
+    }
+}
+
+function editCategory(index) {
+    const newCategory = prompt('Editar categoria:', questions[index].category || '');
+    if (newCategory !== null) {
+        questions[index].category = newCategory;
+        renderQuestions();
+        saveToLocalStorage();
+    }
+}
 
       function confirmDelete(index) {
         if (confirm('Tem certeza que deseja deletar esta pergunta?')) {
@@ -271,6 +299,7 @@
                 <button id="checkAnswerBtn" onclick="checkAnswer(${index})">Enviar</button>
                 <div id="responses"></div>
                 <button id="revealAllBtn" onclick="revealAll(${index})">Revelar Todos</button>
+                <button onclick="document.getElementById('current-question').innerHTML = ''">Fechar</button>
             `;
         const currentQuestionDiv = document.getElementById('current-question');
         currentQuestionDiv.innerHTML = '';
