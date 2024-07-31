@@ -323,7 +323,7 @@ function editCategory(index) {
 
       function checkAnswer(index) {
         const q = questions[index];
-        const input = document.getElementById('answerInput').value;
+        const input = document.getElementById('answerInput').value.trimEnd();
 
         q.responses.forEach((r, i) => {
           if (
