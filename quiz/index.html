@@ -32,6 +32,7 @@
         color: #888;
         margin: none;
         display: inline-block;
+        letter-spacing: 2px;
       }
       #newQuestion,
       #dataText {
@@ -56,7 +57,8 @@
       input[disabled] {
         background-color: #555;
         color: #888;
-        display: none;
+        /*visibility: hidden;*/
+        opacity: .2;
       }
       .question {
         cursor: pointer;
@@ -74,6 +76,10 @@
       .response {
         display: flex;
         align-items: center;
+      }
+      .scorebtn{
+        opacity: .3;
+        margin-left: .3em;
       }
       .response span {
         margin-left: 10px;
@@ -137,8 +143,26 @@
           responseDiv.innerHTML = `
             • <span id="response${i}">${
             r.revealed ? r.text : r.partialText || ''
-          }</span> (${r.score})
+          }</span> (${r.score}) 
         `;
+        const lessbtn = document.createElement('button');
+        lessbtn.innerHTML="-";
+        lessbtn.className = 'scorebtn';
+        lessbtn.onclick = (e) => {
+        				e.stopPropagation();
+        				r.score--;
+                renderResponses(index);saveToLocalStorage();
+        			};
+        responseDiv.appendChild(lessbtn);
+        const morebtn = document.createElement('button');
+        morebtn.innerHTML="+";
+        morebtn.className = 'scorebtn';
+        morebtn.onclick = (e) => {
+        				e.stopPropagation();
+        				r.score++;
+                renderResponses(index);saveToLocalStorage();
+        			};
+        responseDiv.appendChild(morebtn);
           responseDiv.onclick = () => revealPartial(index, i);
           responsesDiv.appendChild(responseDiv);
         });
@@ -207,7 +231,7 @@
           response.partialText = revealChars(
             response.text,
             response.revealClicks
-          );
+          ) + `[+${Math.max(0,4-response.revealClicks)}]`;
         }
 
         renderResponses(index);
@@ -322,7 +346,7 @@ function editCategory(index) {
         q.responses.forEach((r, i) => {
           if (
             r.text.toLowerCase().includes(input.toLowerCase()) &&
-            !r.revealed
+            !r.revealed && input.replace(/\s+/g, '') != ""
           ) {
             //document.getElementById(`response${i}`).innerText = r.text;
             r.acertada += 1;
