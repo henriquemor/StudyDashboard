@@ -1,6 +1,3 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -238,9 +235,14 @@
         }
         
         	    
-        #jsonArea {
+        #jsonArea, #log{
             width: 100%;
             height: 200px;
+        }
+        #log{
+           
+            color: white;
+            background-color: black;
         }
         summary {
         }
@@ -375,6 +377,8 @@
         <button class="button" onclick="loadFromJson()">importar</button>
         <button class="button" onclick="exportToFile()">Download em TXT</button>
         <textarea id="jsonArea" placeholder="JSON"></textarea>
+        histórico
+        <textarea id="log" placeholder=" histórico"></textarea>
     </details>
 
     <script>
@@ -526,6 +530,7 @@
         				e.stopPropagation();
         				const today = formatDate(new Date(new Date()-(1000*60*60*5))); // subtraindo 5h para que o estudo até 6h da manhã seja considerado do dia anterior
         				aula.estudos.push(today);
+                        logAction(`(${aula.nome}) adicionado estudo: ${today} [${materia.nome}]`);
         				//updateStatus(mIndex, aIndex);
         				render();
         				save();
@@ -541,6 +546,7 @@
         				const nextStatus = statuses[(statuses.indexOf(currentStatus) + 1) % statuses.length];
         				aula.status = nextStatus;
         				//updateStatus(mIndex, aIndex);
+                        logAction(`(${aula.nome}) para status: ${aula.status} [${materia.nome}]`);
         				render();
         				save();
         			};
@@ -570,6 +576,7 @@
         				nome: nomeAula,
         				alerta: false
         			});
+                    
         			render();
         			save();
         		};
@@ -682,6 +689,13 @@
         	if (selectedRadio) {
         		localStorage.setItem('selectedRadio', selectedRadio.value);
         	}
+        }
+        function logAction(t){
+            var date = new Date();
+            var seconds = String(date.getSeconds()).padStart(2, '0');
+            var minutes = String(date.getMinutes()).padStart(2, '0');
+            var hours = String(date.getHours()).padStart(2, '0');
+           document.getElementById('log').value += `${hours}:${minutes}:${seconds} > ${t}\n`;
         }
         
         function copyToJson() {
