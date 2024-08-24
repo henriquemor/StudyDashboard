@@ -93,9 +93,11 @@
             bottom: 0;
             opacity: 0.2;
             border-radius: 15px;
+            color:#d9d9d9;
             background-color: #373737;
             padding: 6PX;
         	cursor: default;
+            z-index:-1;
         }
         .broken1{
         	/* https://heyallan.github.io/svg-to-data-uri/ */
@@ -386,8 +388,8 @@
     color: #d9d9d9;
     background-color: #101010;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    box-shadow: 0px 0px 50px rgb(0 0 0 / 27%);
+    padding: 1em;
     box-sizing: border-box;
 }
 
@@ -445,6 +447,7 @@ button[disabled]{
   cursor: no-drop;
 }
 .popover-delete {
+    margin-top: 2em !important;
     background-color: #f4433636 !important;
 }
 .popover-delete:hover { 
@@ -456,8 +459,8 @@ button[disabled]{
 
 .popover-close {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 1em;
+    right: 1em;
     background-color: #2b2b2b !important;
     color: #aaaaaa !important;
     padding: 5px 8px;
@@ -610,7 +613,8 @@ button[disabled]{
         
         				borderDiv.classList.add("border-alertar");
         			} else {
-        				aulaDiv.classList.remove("alertar");
+                        alerta = !isNaN(aula.daysDiff)?aula.daysDiff:"";
+        				//aulaDiv.classList.remove("alertar");
         			}
         			aulaDiv.classList.add("aula");
         			aulaDiv.classList.add(aula.status);
@@ -789,7 +793,7 @@ button[disabled]{
         	const aula = materias[mIndex].aulas[aIndex];
         	const lastStudyDate = new Date(aula.estudos.at(-1));
         	const currentDate = new Date();
-        	const daysDiff = Math.floor((currentDate - lastStudyDate) / (1000 * 60 * 60 * 24));
+        	const daysDiff = Math.floor((currentDate - lastStudyDate) / (1000 * 60 * 60 * 24))-1;
         	
         	aula.daysDiff = daysDiff;
         	
