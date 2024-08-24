@@ -433,13 +433,25 @@
     margin-top: 5px;
 }
 
-.popover ul li button {
+.popover ul li button{
     background-color: #f44336;
     margin-left: 3em;
 }
-
-.popover ul li button:hover { 
-    background-color: #e53935;
+button:disabled,
+button[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc !important;
+  color: #666666;
+  cursor: no-drop;
+}
+.popover-delete {
+    background-color: #f4433636 !important;
+}
+.popover-delete:hover { 
+    background-color: #e53935 !important;
+}
+.popover ul li button:hover{ 
+    background-color: #ea4235;
 }
 
 .popover-close {
@@ -457,7 +469,8 @@
 
 .popover-close:hover {
     background-color: #bbb;
-} 
+}
+
 
         
     </style>
@@ -654,7 +667,7 @@
 				aulaDiv.appendChild(configAulaBtn);
 				configAulaBtn.onclick = (e) => {
         				e.stopPropagation();
-                        logAction(`(${aula.nome}) Configurando [${materia.nome}]`);
+                        //logAction(`(${aula.nome}) Configurando [${materia.nome}]`);
                         openAulaConfigPopover(aula,materia);
         			};
 
@@ -1118,6 +1131,7 @@ function openAulaConfigPopover(aula, materia) {
     const nameInput = document.createElement('input');
     nameInput.type = 'text';
     nameInput.value = aula.nome;
+    let nomeAntigo = aula.nome;
 
     // Botão para salvar o nome da aula editado
     const saveNameButton = document.createElement('button');
@@ -1129,7 +1143,7 @@ function openAulaConfigPopover(aula, materia) {
         } else {
             aula.nome = Number(nameInput.value); 
         }
-        
+        logAction(`(${aula.nome}) Nome mudado de ${nomeAntigo} [${materia.nome}]`);
         save();  // Salva os dados atualizados
         render(); // Renderiza a interface novamente
         //closePopover(popover);
@@ -1149,15 +1163,22 @@ function openAulaConfigPopover(aula, materia) {
         const deleteDayButton = document.createElement('button');
         deleteDayButton.textContent = 'Deletar';
         deleteDayButton.onclick = function () {
+            logAction(`(${aula.nome}) Removendo dia de estudo ${aula.estudos[index]} [${materia.nome}]`);
             aula.estudos.splice(index, 1); // Remove a data do array
             save();  // Salva os dados atualizados
             render(); // Renderiza a interface novamente
-            dayItem.remove(); // Remove o item da lista
+            deleteDayButton.setAttribute('disabled', true); // Remove o item da lista
+            openAulaConfigPopover(aula, materia);
         };
 
         dayItem.appendChild(deleteDayButton);
         daysList.appendChild(dayItem);
     });
+    if(aula.estudos.length == 0){
+        const semItens = document.createElement('li');
+        semItens.textContent = 'Sem dias contabilizados.';
+        daysList.appendChild(semItens);
+    }
 
     // Botão para deletar a aula com confirmação
     const deleteAulaButton = document.createElement('button');
