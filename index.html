@@ -68,6 +68,10 @@
         .aula .nome {
             display: block;
             font-size: 1.3em;
+            max-width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .aula .status {
             display: block;
@@ -368,6 +372,93 @@
             color: #00000021;
         }
 
+
+
+        /* POPOVER */
+
+        .popover {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    width: 300px;
+    color: #d9d9d9;
+    background-color: #101010;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.popover label {
+    display: block;
+    margin-top: 1em;
+    font-weight: bold;
+    margin-bottom: .5em;
+}
+
+.popover input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.popover button {
+    display: inline-block;
+    padding: 8px 12px;
+    margin-top: .2em;
+    border: none;
+    border-radius: 4px;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+.popover button:hover {
+    background-color: #45a049;
+}
+.popover ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 0;
+}
+.popover ul li {
+    padding: .3em 2em;
+    background-color: #222222;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+.popover ul li button {
+    background-color: #f44336;
+    margin-left: 3em;
+}
+
+.popover ul li button:hover { 
+    background-color: #e53935;
+}
+
+.popover-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #2b2b2b !important;
+    color: #aaaaaa !important;
+    padding: 5px 8px;
+    font-size: 16px;
+    line-height: 16px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.popover-close:hover {
+    background-color: #bbb;
+} 
+
         
     </style>
 </head>
@@ -538,7 +629,7 @@
         			}
         
         			//aulaDiv.className = `aula ${aula.status}`;
-        			aulaDiv.innerHTML = `<span class="nome">${aula.nome}</span><span class="status">${textoStatus}</span><span class="alertexto">${alerta}</span>`;
+        			aulaDiv.innerHTML = `<span class="nome" title="${aula.nome}">${aula.nome}</span><span class="status">${textoStatus}</span><span class="alertexto">${alerta}</span>`;
         
         			const saveDateBtn = document.createElement('button');
         			saveDateBtn.textContent = '+';
@@ -563,7 +654,8 @@
 				aulaDiv.appendChild(configAulaBtn);
 				configAulaBtn.onclick = (e) => {
         				e.stopPropagation();
-                                        logAction(`(${aula.nome}) Configurando [${materia.nome}]`);
+                        logAction(`(${aula.nome}) Configurando [${materia.nome}]`);
+                        openAulaConfigPopover(aula,materia);
         			};
 
 				
@@ -596,7 +688,14 @@
         		addAulaBtn.className = "addAula";
         		addAulaBtn.style = "padding: 1em; margin-top:1em";
         		addAulaBtn.onclick = () => {
-				let nomeAula = materia.aulas.length > 0 ? (materia.aulas[materia.aulas.length - 1].nome + 1) : 0;
+                    let nomeAula = 0;
+                    if(materia.aulas.length > 0){
+                       nomeAula = (materia.aulas[materia.aulas.length - 1].nome + 1);
+                       if(isNaN(materia.aulas[materia.aulas.length - 1].nome)){
+                           nomeAula = materia.aulas.length;
+                       }
+                    }
+				
         			materia.aulas.push({
         				status: 'inicial',
         				estudos: [],
@@ -974,6 +1073,133 @@ function calculateCurrentStreak(dates) {
         }
         
         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+let currentPopover = null;  // Variável global para armazenar o popover atual
+
+function openAulaConfigPopover(aula, materia) {
+    // Fecha o popover atual, se houver
+    if (currentPopover) {
+        closePopover(currentPopover);
+    }
+
+    // Criar o popover
+    const popover = document.createElement('div');
+    popover.className = 'popover';
+
+    // Atualiza o popover atual
+    currentPopover = popover;
+
+    // Título para edição do nome da aula
+    const nameLabel = document.createElement('label');
+    nameLabel.classList.add("popover-nameLabel");
+    nameLabel.textContent = 'Nome da aula:';
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.value = aula.nome;
+
+    // Botão para salvar o nome da aula editado
+    const saveNameButton = document.createElement('button');
+    saveNameButton.classList.add("popover-saveName");
+    saveNameButton.textContent = 'Salvar Nome';
+    saveNameButton.onclick = function () {
+        if(isNaN(nameInput.value)){
+            aula.nome = nameInput.value;
+        } else {
+            aula.nome = Number(nameInput.value); 
+        }
+        
+        save();  // Salva os dados atualizados
+        render(); // Renderiza a interface novamente
+        //closePopover(popover);
+    };
+
+    // Visualização dos dias estudados (array estudos)
+    const daysLabel = document.createElement('label');
+    daysLabel.textContent = 'Dias estudados:';
+    daysLabel.classList.add("popover-daysLabel");
+
+    const daysList = document.createElement('ul');
+    daysList.classList.add("popover-dayslist");
+    aula.estudos.forEach((date, index) => {
+        const dayItem = document.createElement('li');
+        dayItem.textContent = date;
+
+        const deleteDayButton = document.createElement('button');
+        deleteDayButton.textContent = 'Deletar';
+        deleteDayButton.onclick = function () {
+            aula.estudos.splice(index, 1); // Remove a data do array
+            save();  // Salva os dados atualizados
+            render(); // Renderiza a interface novamente
+            dayItem.remove(); // Remove o item da lista
+        };
+
+        dayItem.appendChild(deleteDayButton);
+        daysList.appendChild(dayItem);
+    });
+
+    // Botão para deletar a aula com confirmação
+    const deleteAulaButton = document.createElement('button');
+    deleteAulaButton.classList.add("popover-delete");
+    deleteAulaButton.textContent = 'Deletar Aula';
+    deleteAulaButton.onclick = function () {
+        if (confirm('Tem certeza em deletar esta aula? Não é reversível.')) {
+            const aulaIndex = materia.aulas.indexOf(aula);
+            if (aulaIndex > -1) {
+                materia.aulas.splice(aulaIndex, 1); // Remove a aula do array
+                save();  // Salva os dados atualizados
+                render(); // Renderiza a interface novamente
+                closePopover(popover);
+            }
+        }
+    };
+    const closeButton = document.createElement('button');
+    closeButton.classList.add("popover-close");
+    closeButton.textContent = 'X';
+    closeButton.onclick = function () {
+        closePopover(popover)
+    };
+
+    // Adicionar todos os elementos ao popover
+    popover.appendChild(nameLabel);
+    popover.appendChild(nameInput);
+    popover.appendChild(saveNameButton);
+    popover.appendChild(daysLabel);
+    popover.appendChild(daysList);
+    popover.appendChild(deleteAulaButton);
+    popover.appendChild(closeButton);
+
+    // Mostrar o popover
+    document.body.appendChild(popover);
+}
+
+function closePopover(popover) {
+    if (popover) {
+        popover.remove();
+        currentPopover = null; // Reseta o popover atual
+    }
+}
         
     </script>
 </body>
