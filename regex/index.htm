@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regex Replacer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .formatter {
+            margin-bottom: 10px;
+        }
+        .preset-list {
+            margin-top: 20px;
+        }
+        .preset-item {
+            cursor: pointer;
+            color: #ddd;
+            text-decoration: underline;
+        }
+
+
+
+
+
+
+
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        font-family: verdana;
+        background-color: #222;
+        color: #eee;
+      }
+      input[type='text'] {
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: white;
+        background-color: #000;
+        border: 1px solid #888;
+        padding: 6px;
+      }
+      textarea {
+        background-color: #000;
+        color: white;
+      }
+      .oculto {
+        color: #888;
+        margin: none;
+        display: inline-block;
+        letter-spacing: 2px;
+      }
+      #newQuestion,
+      #dataText {
+        height: 10em;
+        margin-top: 3em;
+      }
+      #responses {
+        margin: 1em 0;
+      }
+      #responses div {
+        margin-top: 0.3em;
+      }
+      button {
+        font-size: 1em;
+        background-color: #444;
+        color: white;
+        border: none;
+        border-radius: 7px;
+        padding: 0.6em;
+      }
+      button[disabled],
+      input[disabled] {
+        background-color: #555;
+        color: #888;
+        /*visibility: hidden;*/
+        opacity: .2;
+      }
+      .question {
+        cursor: pointer;
+        margin: 10px 0;
+        color: #ddd;
+        padding: 0.3em;
+        border-radius: 3px;
+        background-color: #444;
+      }
+      .question-details {
+        display: none;
+        background-color: #333;
+        padding: 1em 0.3em;
+      }
+      .response {
+        display: flex;
+        align-items: center;
+      }
+      .scorebtn{
+        opacity: .3;
+        margin-left: .5em;
+        padding: 0 5px;
+        display: inline;
+      }
+      .response span {
+        margin-left: 10px;
+      }
+      .response[data-score='low'] {
+        color: red;
+      }
+      .response[data-score='high'] {
+        color: green;
+      }
+    
+
+
+
+
+
+
+
+
+
+    </style>
+</head>
+<body>
+
+<h1>Regex Replacer</h1>
+
+<label for="inputText">Input Text:</label><br>
+<textarea id="inputText" rows="4" cols="50"></textarea><br><br>
+
+<div id="formatters">
+    <div class="formatter">
+        <input type="text" placeholder="Regex Pattern" class="pattern" value="\[\]\(.*constituicao\.stf\)" />
+        <input type="text" placeholder="Replacement" class="replacement" value="" />
+        <button class="remove" onclick="removeFormatter(this)">-</button>
+    </div>
+    <div class="formatter">
+        <input type="text" placeholder="Regex Pattern" class="pattern" value="^\s*(Art|ART|art)" />
+        <input type="text" placeholder="Replacement" class="replacement" value="##### $1" />
+        <button class="remove" onclick="removeFormatter(this)">-</button>
+    </div>
+</div>
+<button onclick="addFormatter()">+</button><br><br>
+
+<button onclick="compute()">Compute</button><br><br>
+
+<label for="outputText">Output Text:</label><br>
+<textarea id="outputText" rows="4" cols="50" readonly></textarea>
+
+<h2>Save/Load Presets</h2>
+<label for="presetTitle">Preset Title:</label>
+<input type="text" id="presetTitle" placeholder="Enter preset title" />
+<button onclick="savePreset()">Save Preset</button>
+
+<div class="preset-list" id="presetList"></div>
+
+<h2>Import/Export JSON</h2>
+<textarea id="jsonInput" rows="4" cols="50" placeholder="Paste JSON here to import"></textarea><br>
+<button onclick="importJson()">Import</button>
+<button onclick="exportJson()">Export</button>
+
+<script>
+    function addFormatter() {
+        const formatterDiv = document.createElement('div');
+        formatterDiv.className = 'formatter';
+        formatterDiv.innerHTML = `
+            <input type="text" placeholder="Regex Pattern" class="pattern" />
+            <input type="text" placeholder="Replacement" class="replacement" />
+            <button class="remove" onclick="removeFormatter(this)">-</button>
+        `;
+        document.getElementById('formatters').appendChild(formatterDiv);
+    }
+
+    function removeFormatter(button) {
+        const formatterDiv = button.parentElement;
+        formatterDiv.remove();
+    }
+
+    function compute() {
+        const inputText = document.getElementById('inputText').value;
+        const formatters = Array.from(document.querySelectorAll('.formatter')).map(formatter => {
+            const pattern = formatter.querySelector('.pattern').value;
+            const replacement = formatter.querySelector('.replacement').value;
+            return { pattern: new RegExp(pattern, 'gm'), replacement };
+        });
+
+        let outputText = formatters.reduce((a, f) => a.replace(f.pattern, f.replacement), inputText);
+        document.getElementById('outputText').value = outputText;
+    }
+
+    function savePreset() {
+        const title = document.getElementById('presetTitle').value;
+        if (!title) {
+            alert("Please enter a title for the preset.");
+            return;
+        }
+
+        const formatters = Array.from(document.querySelectorAll('.formatter')).map(formatter => {
+            return {
+                pattern: formatter.querySelector('.pattern').value,
+                replacement: formatter.querySelector('.replacement').value
+            };
+        });
+
+        const presets = JSON.parse(localStorage.getItem('regexPresets')) || {};
+        presets[title] = formatters;
+        localStorage.setItem('regexPresets', JSON.stringify(presets));
+        loadPresets();
+        document.getElementById('presetTitle').value = '';
+    }
+
+       function loadPresets() {
+        const presets = JSON.parse(localStorage.getItem('regexPresets')) || {};
+        const presetList = document.getElementById('presetList');
+        presetList.innerHTML = ''; // Clear the current list
+
+        for (const title in presets) {
+            const presetItem = document.createElement('div');
+            presetItem.className = 'preset-item';
+            presetItem.textContent = title;
+            presetItem.onclick = () => loadPreset(title);
+            presetList.appendChild(presetItem);
+        }
+    }
+
+    function loadPreset(title) {
+        const presets = JSON.parse(localStorage.getItem('regexPresets'));
+        const formatters = presets[title];
+
+        // Clear existing formatters
+        document.getElementById('formatters').innerHTML = '';
+
+        // Populate with the selected preset
+        formatters.forEach(formatter => {
+            const formatterDiv = document.createElement('div');
+            formatterDiv.className = 'formatter';
+            formatterDiv.innerHTML = `
+                <input type="text" placeholder="Regex Pattern" class="pattern" value="${formatter.pattern}" />
+                <input type="text" placeholder="Replacement" class="replacement" value="${formatter.replacement}" />
+                <button class="remove" onclick="removeFormatter(this)">-</button>
+            `;
+            document.getElementById('formatters').appendChild(formatterDiv);
+        });
+    }
+
+    function exportJson() {
+        const presets = localStorage.getItem('regexPresets');
+        if (presets) {
+            document.getElementById('jsonInput').value = presets;
+        } else {
+            alert("No presets to export.");
+        }
+    }
+
+    function importJson() {
+        const jsonInput = document.getElementById('jsonInput').value;
+        try {
+            const presets = JSON.parse(jsonInput);
+            localStorage.setItem('regexPresets', JSON.stringify(presets));
+            loadPresets();
+            alert("Presets imported successfully.");
+        } catch (e) {
+            alert("Invalid JSON format.");
+        }
+    }
+
+    // Load presets on page load
+    window.onload = loadPresets;
+</script>
+
+</body>
+</html>
