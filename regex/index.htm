@@ -137,7 +137,17 @@
         <button class="remove" onclick="removeFormatter(this)">-</button>
     </div>
     <div class="formatter">
-        <input type="text" placeholder="Regex Pattern" class="pattern" value="^\s*(Art|ART|art)" />
+        <input type="text" placeholder="Regex Pattern" class="pattern" value="^\s*\*+(TÍT|Tít|tít)" />
+        <input type="text" placeholder="Replacement" class="replacement" value="# $1" />
+        <button class="remove" onclick="removeFormatter(this)">-</button>
+    </div>
+    <div class="formatter">
+        <input type="text" placeholder="Regex Pattern" class="pattern" value="^\s*\*+(DO|Do|do|DA|Da|da)" />
+        <input type="text" placeholder="Replacement" class="replacement" value="## $1" />
+        <button class="remove" onclick="removeFormatter(this)">-</button>
+    </div>
+    <div class="formatter">
+        <input type="text" placeholder="Regex Pattern" class="pattern" value="^\s*\*+(Art|ART|art)" />
         <input type="text" placeholder="Replacement" class="replacement" value="##### $1" />
         <button class="remove" onclick="removeFormatter(this)">-</button>
     </div>
