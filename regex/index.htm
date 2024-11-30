@@ -193,7 +193,7 @@
         const formatters = Array.from(document.querySelectorAll('.formatter')).map(formatter => {
             const pattern = formatter.querySelector('.pattern').value;
             const replacement = formatter.querySelector('.replacement').value;
-            return { pattern: new RegExp(pattern, 'gm'), replacement };
+            return { pattern: new RegExp(pattern, 'gmi'), replacement };
         });
 
         let outputText = formatters.reduce((a, f) => a.replace(f.pattern, f.replacement), inputText);
