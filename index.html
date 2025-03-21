@@ -1177,6 +1177,10 @@ function openAulaConfigPopover(aula, materia) {
             openAulaConfigPopover(aula, materia);
         };
 
+	    dayItem.onclick = function() {
+		editDate(aula, index, materia, popover); //chama a função de edição. Adicione popover.
+	};
+
         dayItem.appendChild(deleteDayButton);
         daysList.appendChild(dayItem);
     });
@@ -1202,6 +1206,35 @@ function openAulaConfigPopover(aula, materia) {
             }
         }
     };
+
+    function editDate(aula, index, materia, popover) { //recebe popover como parametro
+	const oldDate = aula.estudos[index];
+	const newDate = prompt("Edite a data (AAAA-MM-DD):", oldDate);
+
+	if (newDate !== null && newDate !== "" && isValidDate(newDate)) {
+		aula.estudos[index] = newDate;
+        logAction(`(${aula.nome}) Dia editado de ${oldDate} para ${newDate} [${materia.nome}]`);
+		save();
+		render();
+		//reabrir o popover
+		openAulaConfigPopover(aula, materia);
+		
+	} else if (newDate !== null) {
+		alert("Formato de data inválido. Use AAAA-MM-DD.");
+		editDate(aula, index, materia, popover); // Mantém no popover
+	} else {
+		//reabrir o popover, se cancelado
+		openAulaConfigPopover(aula, materia);
+	}
+}
+
+	function isValidDate(dateString) {
+  return /^\d{4}-\d{2}-\d{2}$/.test(dateString);
+}
+
+
+
+	
     const closeButton = document.createElement('button');
     closeButton.classList.add("popover-close");
     closeButton.textContent = 'X';
