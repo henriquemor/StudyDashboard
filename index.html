@@ -504,6 +504,9 @@ button[disabled]{
         <textarea id="jsonArea" placeholder="JSON"></textarea>
         histórico
         <textarea id="log" placeholder=" histórico"></textarea>
+	<button class="button" onclick="generateReport()">Gerar Relatório</button>
+        <textarea id="reportArea"></textarea>
+	    
     </details>
 
     <script>
@@ -880,6 +883,61 @@ button[disabled]{
         		console.log(e);
         	}
         }
+
+
+	    function generateReport() {
+    let reportText = "";
+
+    materias.forEach(materia => {
+        const totalAulas = materia.aulas.length;
+        const aulasEstudadas = materia.aulas.filter(aula => aula.status !== 'inicial').length;
+
+        reportText += `${materia.nome} - estudadas ${aulasEstudadas} aulas de ${totalAulas}, sendo que `;
+
+        let aulaDescriptions = [];
+        materia.aulas.forEach((aula, index) => {
+            if (aula.status !== 'inicial') {  // Só inclui aulas que já foram iniciadas
+                let aulaText = `a aula ${aula.nome} `;
+
+                if (aula.alerta) {
+                    aulaText += "precisa de revisão e ";
+                } else {
+                    aulaText += "não precisa de revisão ";
+                }
+
+                if(!isNaN(aula.daysDiff)){
+                     aulaText +=  `não é estudada há ${aula.daysDiff} dias `;
+                }
+                else{
+                     aulaText +=  `e ainda não tem dias contabilizados `;
+                }
+
+              
+                if (aula.status.startsWith('questoes')) {
+                    aulaText += "e ainda tem questões a resolver";
+                } else if (aula.status === 'revisao') {
+                    aulaText += "e está no modo revisão";
+                } else if (aula.status === 'estudando') {
+                    aulaText += "está em modo de estudo";
+                     if(!isNaN(aula.daysDiff)){
+                        aulaText += `, com o último estudo há ${aula.daysDiff} dias`;
+                     }
+                }
+
+                aulaDescriptions.push(aulaText);
+            }
+        });
+
+
+        reportText += aulaDescriptions.join(", ") + ".\n";
+    });
+
+
+    document.getElementById('reportArea').textContent = reportText;
+}
+
+
+	    
         
         
         	    
