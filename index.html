@@ -892,15 +892,15 @@ button[disabled]{
         const totalAulas = materia.aulas.length;
         const aulasEstudadas = materia.aulas.filter(aula => aula.status !== 'inicial').length;
 
-        reportText += `${materia.nome} - total de aulas:${totalAulas}. Aulas estudadas ${aulasEstudadas}, sendo que `;
+        reportText += ` Matéria ${materia.nome} - Total de aulas: ${totalAulas}. Aulas já iniciadas ${aulasEstudadas}, sendo que: `;
 
         let aulaDescriptions = [];
         materia.aulas.forEach((aula, index) => {
             if (aula.status !== 'inicialx') {  // Só inclui aulas que já foram iniciadas
-                let aulaText = `a aula ${aula.nome} `;
+                let aulaText = `Aula número ${aula.nome} `;
 
                 if (aula.alerta) {
-                    aulaText += "precisa de revisão e ";
+                    aulaText += "precisa de revisão em algum momento futuro e ";
                 } else {
                     aulaText += "não precisa de revisão ";
                 }
@@ -909,7 +909,7 @@ button[disabled]{
                      aulaText +=  `não é estudada há ${aula.daysDiff} dias `;
                 }
                 else{
-                     aulaText +=  `e ainda não foi iniciada`;
+                     aulaText +=  `, ainda não foi iniciada `;
                 }
 
               
@@ -928,13 +928,14 @@ button[disabled]{
                         aulaText += `, com o última resolução há ${aula.daysDiff} dias`;
                      }
                 } else if (aula.status === 'revisao') {
-                    aulaText += "foi estudada, todas as questões resolvidas e está no modo revisão";
+                    aulaText += "foi estudada, todas as questões resolvidas e está no modo revisão, sendo necessária uma revisão aleatoriamente periodicamente";
                 } else if (aula.status === 'estudando') {
-                    aulaText += "está em modo de estudo";
+                    aulaText += "está em modo de estudo, ou seja, está sendo lida a parte do conteúdo";
                      if(!isNaN(aula.daysDiff)){
                         aulaText += `, com o último estudo há ${aula.daysDiff} dias`;
                      }
                 }
+		    aulaText += '\n';
 
                 aulaDescriptions.push(aulaText);
             }
