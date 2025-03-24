@@ -490,13 +490,14 @@ button[disabled]{
         <div id="progressoTotalTexto"></div>
         <progress id="progressoTotalBarra" min="0" max="100"></progress>
     </div>
+	<div id="reviewSection"></div>
     <div id="app"></div>
     <button class="button addMateria" onclick="
 	    materias.push({ nome: `Matéria ${materias.length + 1}`, aulas: [] });
             render();
             save();">Adicionar Matéria
     </button>
-	<div id="reviewSection"></div>
+	
     <details>
         <summary>exportar/importar</summary>
         <button class="button" onclick="copyToJson()">exportar</button>
@@ -999,16 +1000,17 @@ function findAulasForReview() {
 
         // Atualiza o *conteúdo interno* de reviewSection
         reviewSection.innerHTML = `
-            <h3>Revisar agora:</h3>
-            <p>Matéria: ${aulaToReview.materiaNome}</p>
-            <p>Aula: ${aulaToReview.aulaNome}</p>
-            <p>Status: ${textoStatus}</p>
+            <h3>Questões para revisar agora:</h3>
+            <br>${aulaToReview.materiaNome}
+            <br>aula: ${aulaToReview.aulaNome}
+            <br>no momento: ${textoStatus}
             
-            <button id="nextReviewButton" onClick="updateReviewSection()">Próxima revisão</button> 
+            <button id="nextReviewButton" class="button" onClick="updateReviewSection()">Próxima revisão</button> 
+	    <br>
         `;
 
     } else {
-        reviewSection.innerHTML = `<p>Nenhuma aula para revisar no momento! 🎉</p>`;
+        reviewSection.innerHTML = `<b>Nenhuma aula para revisar no momento! 🎉</b>`;
     }
 }
 
