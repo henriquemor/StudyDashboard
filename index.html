@@ -496,6 +496,7 @@ button[disabled]{
             render();
             save();">Adicionar Matéria
     </button>
+	<div id="reviewSection"></div>
     <details>
         <summary>exportar/importar</summary>
         <button class="button" onclick="copyToJson()">exportar</button>
@@ -950,12 +951,75 @@ button[disabled]{
 }
 
 
+
+function findAulasForReview() {
+    const aulasForReview = [];
+    materias.forEach((materia, mIndex) => {
+        materia.aulas.forEach((aula, aIndex) => {
+            if (aula.alerta) {
+                aulasForReview.push({ mIndex, aIndex, materiaNome: materia.nome, aulaNome: aula.nome, status: aula.status, daysDiff: aula.daysDiff });//Adicionado daysDiff
+            }
+        });
+    });
+    return aulasForReview;
+}
+
+	            const aulasForReview = findAulasForReview();
+        function updateReviewSection() {
+    const aulasForReview = findAulasForReview();
+    const reviewSection = document.getElementById('reviewSection'); // Obtém o elemento existente
+
+    if (aulasForReview.length > 0) {
+        let randomAulaIndex = Math.floor(Math.random() * aulasForReview.length);
+        let aulaToReview = aulasForReview[randomAulaIndex];
+
+        let textoStatus = "";
+        switch (aulaToReview.status) {
+            case "inicial":
+                textoStatus = " ";
+                break;
+            case "estudando":
+                textoStatus = "estudando";
+                break;
+            case "questoes1":
+                textoStatus = "questões 1/4";
+                break;
+            case "questoes2":
+                textoStatus = "questões 2/4";
+                break;
+            case "questoes3":
+                textoStatus = "questões 3/4";
+                break;
+            case "revisao":
+                textoStatus = "revisando";
+                break;
+            default:
+                break;
+        }
+
+        // Atualiza o *conteúdo interno* de reviewSection
+        reviewSection.innerHTML = `
+            <h3>Revisar agora:</h3>
+            <p>Matéria: ${aulaToReview.materiaNome}</p>
+            <p>Aula: ${aulaToReview.aulaNome}</p>
+            <p>Status: ${textoStatus}</p>
+            
+            <button id="nextReviewButton" onClick="updateReviewSection()">Próxima revisão</button> 
+        `;
+
+    } else {
+        reviewSection.innerHTML = `<p>Nenhuma aula para revisar no momento! 🎉</p>`;
+    }
+}
+
+
+	    
 	    
         
         
         	    
         render();
-        
+        updateReviewSection();
         
         
         	    
@@ -1332,6 +1396,11 @@ function closePopover(popover) {
         currentPopover = null; // Reseta o popover atual
     }
 }
+
+	    
+
+
+	    
         
     </script>
 </body>
