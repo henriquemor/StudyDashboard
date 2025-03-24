@@ -259,7 +259,7 @@
         }
         
         	    
-        #jsonArea, #log{
+        #jsonArea, #log, #reportArea{
             width: 100%;
             height: 200px;
         }
@@ -892,11 +892,11 @@ button[disabled]{
         const totalAulas = materia.aulas.length;
         const aulasEstudadas = materia.aulas.filter(aula => aula.status !== 'inicial').length;
 
-        reportText += `${materia.nome} - estudadas ${aulasEstudadas} aulas de ${totalAulas}, sendo que `;
+        reportText += `${materia.nome} - total de aulas:${totalAulas}. Aulas estudadas ${aulasEstudadas}, sendo que `;
 
         let aulaDescriptions = [];
         materia.aulas.forEach((aula, index) => {
-            if (aula.status !== 'inicial') {  // Só inclui aulas que já foram iniciadas
+            if (aula.status !== 'inicialx') {  // Só inclui aulas que já foram iniciadas
                 let aulaText = `a aula ${aula.nome} `;
 
                 if (aula.alerta) {
@@ -909,14 +909,26 @@ button[disabled]{
                      aulaText +=  `não é estudada há ${aula.daysDiff} dias `;
                 }
                 else{
-                     aulaText +=  `e ainda não tem dias contabilizados `;
+                     aulaText +=  `e ainda não foi iniciada`;
                 }
 
               
                 if (aula.status.startsWith('questoes')) {
-                    aulaText += "e ainda tem questões a resolver";
+                    aulaText += "foi estudada mas ainda tem questões a resolver";
+			if (aula.status.endsWith('1')) {
+                    aulaText += ", 1/4 das questões já foram resolvidas";
+			}
+			if (aula.status.endsWith('2')) {
+                    aulaText += ", 2/4 das questões já foram resolvidas";
+			}
+			if (aula.status.endsWith('3')) {
+                    aulaText += ", 3/4 das questões já foram resolvidas";
+			}
+			if(!isNaN(aula.daysDiff)){
+                        aulaText += `, com o última resolução há ${aula.daysDiff} dias`;
+                     }
                 } else if (aula.status === 'revisao') {
-                    aulaText += "e está no modo revisão";
+                    aulaText += "foi estudada, todas as questões resolvidas e está no modo revisão";
                 } else if (aula.status === 'estudando') {
                     aulaText += "está em modo de estudo";
                      if(!isNaN(aula.daysDiff)){
