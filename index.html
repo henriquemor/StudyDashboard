@@ -954,15 +954,31 @@ button[disabled]{
 
 
 function findAulasForReview() {
-    const aulasForReview = [];
-    materias.forEach((materia, mIndex) => {
-        materia.aulas.forEach((aula, aIndex) => {
-            if (aula.alerta) {
-                aulasForReview.push({ mIndex, aIndex, materiaNome: materia.nome, aulaNome: aula.nome, status: aula.status, daysDiff: aula.daysDiff });//Adicionado daysDiff
-            }
-        });
-    });
-    return aulasForReview;
+    // 1. Filtra TODAS as aulas que precisam de revisão (alerta = true)
+    const aulasEmAlerta = materias.flatMap(materia =>
+        materia.aulas
+            .filter(aula => aula.alerta)
+            .map(aula => ({
+                mIndex: materias.indexOf(materia),
+                aIndex: materia.aulas.indexOf(aula),
+                materiaNome: materia.nome,
+                aulaNome: aula.nome,
+                status: aula.status,
+                daysDiff: !isNaN(aula.daysDiff) ? aula.daysDiff : 0 // Trata NaN
+            }))
+    );
+
+    // 2. Usa um Map para rastrear a aula com maior daysDiff por matéria.
+    const aulasPorMateria = new Map();
+
+    for (const aula of aulasEmAlerta) {
+        if (!aulasPorMateria.has(aula.mIndex) || aula.daysDiff > aulasPorMateria.get(aula.mIndex).daysDiff) {
+            aulasPorMateria.set(aula.mIndex, aula);
+        }
+    }
+
+    // 3. Converte o Map de volta para um array.
+    return Array.from(aulasPorMateria.values());
 }
 
 	            const aulasForReview = findAulasForReview();
@@ -1000,13 +1016,12 @@ function findAulasForReview() {
 
         // Atualiza o *conteúdo interno* de reviewSection
         reviewSection.innerHTML = `
-            <h3>Questões para revisar agora:</h3>
+            <b>Questões para revisar agora:</b>
             <br>${aulaToReview.materiaNome}
-            <br>aula: ${aulaToReview.aulaNome}
-            <br>no momento: ${textoStatus}
-            
-            <button id="nextReviewButton" class="button" onClick="updateReviewSection()">Próxima revisão</button> 
-	    <br>
+            <br>aula: ${aulaToReview.aulaNome} (${textoStatus})
+            <br>
+            <button id="nextReviewButton" class="button" onClick="updateReviewSection()">próximo desafio</button> 
+	    <br><br>
         `;
 
     } else {
