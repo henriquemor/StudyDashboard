@@ -490,7 +490,7 @@ button[disabled]{
         <div id="progressoTotalTexto"></div>
         <progress id="progressoTotalBarra" min="0" max="100"></progress>
     </div>
-	<div id="reviewSection"></div>
+	<div style="margin:auto"><div id="reviewSection"></div></div>
     <div id="app"></div>
     <button class="button addMateria" onclick="
 	    materias.push({ nome: `Matéria ${materias.length + 1}`, aulas: [] });
@@ -999,13 +999,13 @@ function findAulasForReview() {
                 textoStatus = "estudando";
                 break;
             case "questoes1":
-                textoStatus = "questões 1/4";
+                textoStatus = "1/4";
                 break;
             case "questoes2":
-                textoStatus = "questões 2/4";
+                textoStatus = "2/4";
                 break;
             case "questoes3":
-                textoStatus = "questões 3/4";
+                textoStatus = "3/4";
                 break;
             case "revisao":
                 textoStatus = "revisando";
@@ -1018,9 +1018,9 @@ function findAulasForReview() {
         reviewSection.innerHTML = `
             <b>Questões para revisar agora:</b>
             <br>${aulaToReview.materiaNome}
-            <br>aula: ${aulaToReview.aulaNome} (${textoStatus})
+            <br>aula: <b>${aulaToReview.aulaNome}</b> (${textoStatus})
             <br>
-            <button id="nextReviewButton" class="button" onClick="updateReviewSection()">próximo desafio</button> 
+            <button style="margin:auto" id="nextReviewButton" class="button" onClick="updateReviewSection()">próximo desafio</button> 
 	    <br><br>
         `;
 
