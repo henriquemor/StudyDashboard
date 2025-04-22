@@ -731,6 +731,39 @@ button[disabled]{
         			save();
         		};
         		materiaDiv.appendChild(addAulaBtn);
+
+
+			// botão para adicionar materia no meio
+			        // === INÍCIO DO CÓDIGO PARA ADICIONAR ===
+        const addMateriaAbaixoBtn = document.createElement('button');
+        addMateriaAbaixoBtn.textContent = 'Adicionar Matéria';
+        // Reutiliza a classe 'button' para estilo base e adiciona uma específica
+        addMateriaAbaixoBtn.className = 'button addMateriaAbaixo';
+        // Adiciona um pouco de margem para separar do botão anterior
+        addMateriaAbaixoBtn.style.marginLeft = '10px';
+
+        addMateriaAbaixoBtn.onclick = () => {
+            // Cria um objeto para a nova matéria
+            const novaMateria = {
+                nome: `Nova Matéria`, // Você pode querer um nome padrão diferente
+                aulas: []
+            };
+            // Insere a nova matéria no array 'materias' na posição logo após a atual (mIndex + 1)
+            // O segundo argumento '0' significa que não estamos removendo nenhum item.
+            materias.splice(mIndex + 1, 0, novaMateria);
+
+            // Re-renderiza a interface para mostrar a nova matéria
+            render();
+            // Salva o estado atualizado no localStorage
+            save();
+        };
+        // Adiciona o novo botão ao div da matéria atual
+        materiaDiv.appendChild(addMateriaAbaixoBtn);
+        // === FIM DO CÓDIGO PARA ADICIONAR ===
+
+
+			
+
         
         		app.appendChild(materiaDiv);
         
