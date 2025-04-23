@@ -595,6 +595,37 @@ button[disabled]{
          		   }
         		};
         		materiaDivTitle.appendChild(downBtn);
+
+
+			const addMateriaHereBtn = document.createElement('button');
+        		addMateriaHereBtn.innerHTML = '➕';
+        		addMateriaHereBtn.className = 'downBtn';
+        		addMateriaHereBtn.onclick = () => {
+				if (confirm('Tem certeza em ADICIONAR uma nova MATÉRIA?')) {
+					logAction(`MATÉRIA ADICIONADA após [${materia.nome}]`);
+          		  const novaMateria = {
+                nome: `Nova Matéria`,
+                aulas: []
+			  }
+                 materias.splice(mIndex + 1, 0, novaMateria);
+            render();
+            save();
+				}
+        		};
+        		materiaDivTitle.appendChild(addMateriaHereBtn);
+
+			const deleteMateriaBtn = document.createElement('button');
+        		deleteMateriaBtn.innerHTML = '🗑️'; 
+        		deleteMateriaBtn.className = 'downBtn';
+        		deleteMateriaBtn.onclick = () => {
+				if (confirm('Tem certeza em DELETAR esta MATÉRIA? Não é reversível.')) {
+          		  logAction(`MATÉRIA DELETADA [${materia.nome}]`);
+                materia.splice(mIndex, 1); // Remove a matéria do array
+                save();  // Salva os dados atualizados
+                render(); // Renderiza a interface novamente
+				}
+        		};
+        		materiaDivTitle.appendChild(deleteMateriaBtn);
         
         		
         
@@ -733,33 +764,7 @@ button[disabled]{
         		materiaDiv.appendChild(addAulaBtn);
 
 
-			// botão para adicionar materia no meio
-			        // === INÍCIO DO CÓDIGO PARA ADICIONAR ===
-        const addMateriaAbaixoBtn = document.createElement('button');
-        addMateriaAbaixoBtn.textContent = 'Adicionar Matéria';
-        // Reutiliza a classe 'button' para estilo base e adiciona uma específica
-        addMateriaAbaixoBtn.className = 'button addMateriaAbaixo';
-        // Adiciona um pouco de margem para separar do botão anterior
-        addMateriaAbaixoBtn.style.marginLeft = '10px';
-
-        addMateriaAbaixoBtn.onclick = () => {
-            // Cria um objeto para a nova matéria
-            const novaMateria = {
-                nome: `Nova Matéria`, // Você pode querer um nome padrão diferente
-                aulas: []
-            };
-            // Insere a nova matéria no array 'materias' na posição logo após a atual (mIndex + 1)
-            // O segundo argumento '0' significa que não estamos removendo nenhum item.
-            materias.splice(mIndex + 1, 0, novaMateria);
-
-            // Re-renderiza a interface para mostrar a nova matéria
-            render();
-            // Salva o estado atualizado no localStorage
-            save();
-        };
-        // Adiciona o novo botão ao div da matéria atual
-        materiaDiv.appendChild(addMateriaAbaixoBtn);
-        // === FIM DO CÓDIGO PARA ADICIONAR ===
+			
 
 
 			
