@@ -195,6 +195,12 @@
         .border-revisao{
         	border: #b826c8 3px solid;
         }
+
+	.border.oldest {
+    outline: 2px solid gold;
+    outline-offset: 2px;
+    box-shadow: 0 0 8px gold;
+        }
         
         .aula button {
             background-color: #ffffff77;
@@ -535,6 +541,20 @@ button[disabled]{
         }
         
         function render() {
+		
+ materias.forEach((materia, mIndex) => {
+            materia.aulas.forEach((aula, aIndex) => {
+                updateStatus(mIndex, aIndex); // Calcula e armazena daysDiff E alerta
+            });
+        });
+
+		const aulasForReview = findAulasForReview();
+        // ETAPA 3: Criar um Map para consulta rápida dentro do loop { mIndex: aIndex }
+        const oldestIndicesMap = new Map();
+        aulasForReview.forEach(info => oldestIndicesMap.set(info.mIndex, info.aIndex));
+		
+
+
         	const app = document.getElementById('app');
         	app.innerHTML = '';
         	let selectedRadio = localStorage.getItem('selectedRadio');
@@ -632,14 +652,16 @@ button[disabled]{
         		materia.aulas.forEach((aula, aIndex) => {
         			countAulas++;
         			//console.log(aula);
-        			updateStatus(mIndex, aIndex);
+        			//updateStatus(mIndex, aIndex);
         			//console.log(aula);
         
         			const aulaDiv = document.createElement('div');
         
         			const borderDiv = document.createElement('div');
         			borderDiv.classList.add("border");
-        			
+        			if (aIndex === oldestIndicesMap.get(mIndex)) {
+                                   borderDiv.classList.add("oldest");
+                                }
         
         			let alerta = "";
         			if (aula.alerta) {
