@@ -620,7 +620,7 @@ button[disabled]{
         		deleteMateriaBtn.onclick = () => {
 				if (confirm('Tem certeza em DELETAR esta MATÉRIA? Não é reversível.')) {
           		  logAction(`MATÉRIA DELETADA [${materia.nome}]`);
-                materia.splice(mIndex, 1); // Remove a matéria do array
+                materias.splice(mIndex, 1); // Remove a matéria do array
                 save();  // Salva os dados atualizados
                 render(); // Renderiza a interface novamente
 				}
